@@ -1,6 +1,42 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@model List<Category>  
 
+
+<div class="container">
+     
+    <div class="row pt-4  pb-3">
+        <div class="col-6">
+            <h2 class="text-primary">
+                      Category List
+                </h2>
+        </div>
+        <div class="col-6 text-end">
+            <a asp-controller="Category" asp-action="Create"
+            class="btn btn-primary"
+            >
+                Add Category <i class="bi bi-plus-circle"></i>
+                
+            </a>
+        </div>
+    </div>
+        
+<table class="table table-hover pt-4">
+    <thead>
+      
+        <tr class ="table-primary">
+            <th scope="col">Name</th>
+            <th scope="col">DisplayOrder</th>
+        </tr>
+
+    </thead>
+    <tbody>
+        @foreach (var m in Model)
+{     
+        <tr >
+        <td>@m.Name</td>
+        <td>@m.DisplayOrder</td>
+         </tr> 
+}
+    </tbody>
+</table>
+
+</div>
