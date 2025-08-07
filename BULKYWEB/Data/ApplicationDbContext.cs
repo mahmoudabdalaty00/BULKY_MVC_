@@ -1,4 +1,5 @@
-﻿using BULKYWEB.Models;
+﻿using BULKYWEB.Data.Configuration;
+using BULKYWEB.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace BULKYWEB.Data
@@ -14,5 +15,14 @@ namespace BULKYWEB.Data
 
         public DbSet<Category> Categories { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+
+            //this repeated for each class
+           // modelBuilder.ApplyConfiguration(new CategorySeed());
+
+            //this done for all 
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+        }
     }
 }
