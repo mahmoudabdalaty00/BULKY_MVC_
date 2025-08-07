@@ -1,7 +1,28 @@
+using BULKYWEB.Data;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+var connectionString = builder.Configuration
+        .GetConnectionString("ConnectionString");
+
+builder.Services.AddDbContext<ApplicationDbContext>(o =>
+  o.UseSqlServer(connectionString)
+);
+
+
+
+
+
+
+
+
+
+
+
 
 var app = builder.Build();
 
