@@ -6,8 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
-namespace BULKYWEB.Controllers
+namespace BULKYWEB.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class CategoryController : Controller
     {
 
@@ -40,7 +41,7 @@ namespace BULKYWEB.Controllers
                 return View(categ);
             }
 
-            if(String.IsNullOrEmpty(categ.Name))
+            if(string.IsNullOrEmpty(categ.Name))
             {
                 ModelState.AddModelError("Name", "Category name cannot be empty.");
                 return View(categ);
@@ -105,7 +106,7 @@ namespace BULKYWEB.Controllers
                 return View(categ);
             }
 
-            if (String.IsNullOrEmpty(categ.Name))
+            if (string.IsNullOrEmpty(categ.Name))
             {
                 ModelState.AddModelError("Name", "Category name cannot be empty.");
                 return View(categ);
