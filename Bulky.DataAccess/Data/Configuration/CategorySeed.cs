@@ -19,7 +19,7 @@ namespace Bulky.DataAccess.Data.Configuration
             new Category { Id = 8, Name = "Beauty", DisplayOrder = 8 },
             new Category { Id = 9, Name = "Automotive", DisplayOrder = 9 },
             new Category { Id = 10, Name = "Music", DisplayOrder = 10 });
-      
+
         }
     }
 }

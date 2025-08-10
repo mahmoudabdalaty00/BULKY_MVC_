@@ -3,6 +3,7 @@ using Bulky.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Bulky.DataAccess.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250810104257_INtiProduct")]
+    partial class INtiProduct
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -115,9 +118,6 @@ namespace Bulky.DataAccess.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -144,8 +144,6 @@ namespace Bulky.DataAccess.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CategoryId");
-
                     b.ToTable("Products");
 
                     b.HasData(
@@ -153,7 +151,6 @@ namespace Bulky.DataAccess.Data.Migrations
                         {
                             Id = 1,
                             Author = "Jon Skeet",
-                            CategoryId = 2,
                             Description = "Advanced guide to C# programming.",
                             ISBN = "9781617294532",
                             ListPrice = 59.990000000000002,
@@ -166,7 +163,6 @@ namespace Bulky.DataAccess.Data.Migrations
                         {
                             Id = 2,
                             Author = "Andrew Lock",
-                            CategoryId = 2,
                             Description = "Comprehensive guide to building web apps with ASP.NET Core.",
                             ISBN = "9781617294617",
                             ListPrice = 64.989999999999995,
@@ -179,7 +175,6 @@ namespace Bulky.DataAccess.Data.Migrations
                         {
                             Id = 3,
                             Author = "Robert C. Martin",
-                            CategoryId = 2,
                             Description = "A Handbook of Agile Software Craftsmanship.",
                             ISBN = "9780132350884",
                             ListPrice = 49.990000000000002,
@@ -192,7 +187,6 @@ namespace Bulky.DataAccess.Data.Migrations
                         {
                             Id = 4,
                             Author = "Erich Gamma et al.",
-                            CategoryId = 2,
                             Description = "Elements of Reusable Object-Oriented Software.",
                             ISBN = "9780201633610",
                             ListPrice = 54.990000000000002,
@@ -205,7 +199,6 @@ namespace Bulky.DataAccess.Data.Migrations
                         {
                             Id = 5,
                             Author = "Andrew Hunt & David Thomas",
-                            CategoryId = 2,
                             Description = "Your Journey to Mastery.",
                             ISBN = "9780135957059",
                             ListPrice = 44.990000000000002,
@@ -218,7 +211,6 @@ namespace Bulky.DataAccess.Data.Migrations
                         {
                             Id = 6,
                             Author = "Adam Freeman",
-                            CategoryId = 2,
                             Description = "Best practices and performance optimization for EF Core.",
                             ISBN = "9781484287486",
                             ListPrice = 69.989999999999995,
@@ -231,7 +223,6 @@ namespace Bulky.DataAccess.Data.Migrations
                         {
                             Id = 7,
                             Author = "Douglas Crockford",
-                            CategoryId = 2,
                             Description = "Deep dive into the best features of JavaScript.",
                             ISBN = "9780596517748",
                             ListPrice = 39.990000000000002,
@@ -244,7 +235,6 @@ namespace Bulky.DataAccess.Data.Migrations
                         {
                             Id = 8,
                             Author = "Kyle Simpson",
-                            CategoryId = 2,
                             Description = "Understanding JavaScript deeply.",
                             ISBN = "9781098124045",
                             ListPrice = 34.990000000000002,
@@ -257,7 +247,6 @@ namespace Bulky.DataAccess.Data.Migrations
                         {
                             Id = 9,
                             Author = "Alan Beaulieu",
-                            CategoryId = 2,
                             Description = "Master SQL for data management and analysis.",
                             ISBN = "9781492057611",
                             ListPrice = 49.990000000000002,
@@ -270,7 +259,6 @@ namespace Bulky.DataAccess.Data.Migrations
                         {
                             Id = 10,
                             Author = "Nigel Poulton",
-                            CategoryId = 2,
                             Description = "Comprehensive Docker reference.",
                             ISBN = "9781521822807",
                             ListPrice = 54.990000000000002,
@@ -283,7 +271,6 @@ namespace Bulky.DataAccess.Data.Migrations
                         {
                             Id = 11,
                             Author = "Chris Richardson",
-                            CategoryId = 2,
                             Description = "With examples in Java and Spring.",
                             ISBN = "9781617294549",
                             ListPrice = 64.989999999999995,
@@ -296,7 +283,6 @@ namespace Bulky.DataAccess.Data.Migrations
                         {
                             Id = 12,
                             Author = "Eric Freeman",
-                            CategoryId = 2,
                             Description = "A brain-friendly guide to design patterns.",
                             ISBN = "9781492078005",
                             ListPrice = 59.990000000000002,
@@ -309,7 +295,6 @@ namespace Bulky.DataAccess.Data.Migrations
                         {
                             Id = 13,
                             Author = "Brendan Burns",
-                            CategoryId = 2,
                             Description = "Dive into Kubernetes cluster management.",
                             ISBN = "9781492046530",
                             ListPrice = 64.989999999999995,
@@ -322,7 +307,6 @@ namespace Bulky.DataAccess.Data.Migrations
                         {
                             Id = 14,
                             Author = "Eric Matthes",
-                            CategoryId = 2,
                             Description = "A hands-on introduction to programming.",
                             ISBN = "9781593279288",
                             ListPrice = 44.990000000000002,
@@ -335,7 +319,6 @@ namespace Bulky.DataAccess.Data.Migrations
                         {
                             Id = 15,
                             Author = "Luciano Ramalho",
-                            CategoryId = 2,
                             Description = "Clear, concise, and effective programming in Python.",
                             ISBN = "9781492056355",
                             ListPrice = 64.989999999999995,
@@ -348,7 +331,6 @@ namespace Bulky.DataAccess.Data.Migrations
                         {
                             Id = 16,
                             Author = "Martin Fowler",
-                            CategoryId = 2,
                             Description = "Improving the design of existing code.",
                             ISBN = "9780134757599",
                             ListPrice = 69.989999999999995,
@@ -361,7 +343,6 @@ namespace Bulky.DataAccess.Data.Migrations
                         {
                             Id = 17,
                             Author = "Eric Evans",
-                            CategoryId = 2,
                             Description = "Tackling complexity in the heart of software.",
                             ISBN = "9780321125217",
                             ListPrice = 74.989999999999995,
@@ -374,7 +355,6 @@ namespace Bulky.DataAccess.Data.Migrations
                         {
                             Id = 18,
                             Author = "Mike Cohn",
-                            CategoryId = 2,
                             Description = "Mastering Agile project estimation.",
                             ISBN = "9780131479418",
                             ListPrice = 49.990000000000002,
@@ -387,7 +367,6 @@ namespace Bulky.DataAccess.Data.Migrations
                         {
                             Id = 19,
                             Author = "Jez Humble",
-                            CategoryId = 2,
                             Description = "Reliable software releases through automation.",
                             ISBN = "9780321601919",
                             ListPrice = 64.989999999999995,
@@ -400,7 +379,6 @@ namespace Bulky.DataAccess.Data.Migrations
                         {
                             Id = 20,
                             Author = "Betsy Beyer",
-                            CategoryId = 2,
                             Description = "How Google runs production systems.",
                             ISBN = "9781491929124",
                             ListPrice = 74.989999999999995,
@@ -409,17 +387,6 @@ namespace Bulky.DataAccess.Data.Migrations
                             price100 = 59.990000000000002,
                             price50 = 64.989999999999995
                         });
-                });
-
-            modelBuilder.Entity("Bulky.Models.Models.Product", b =>
-                {
-                    b.HasOne("Bulky.Models.Models.Category", "Category")
-                        .WithMany()
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Category");
                 });
 #pragma warning restore 612, 618
         }

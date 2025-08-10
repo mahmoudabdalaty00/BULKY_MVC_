@@ -88,8 +88,7 @@ namespace BULKYWEB.Areas.Admin.Controllers
                 return NotFound();
             }
 
-           var category = _unitOfWork.Category.GetAll()
-                    .FirstOrDefault(c => c.Id == id);
+           var category = _unitOfWork.Category.Get(c => c.Id == id);
 
             if (category == null)
             {
