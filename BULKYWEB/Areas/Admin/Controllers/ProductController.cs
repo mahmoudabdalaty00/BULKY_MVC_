@@ -3,16 +3,13 @@ using Bulky.Models.Models;
 using Bulky.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using NuGet.Versioning;
-using System.Configuration;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace BULKYWEB.Areas.Admin.Controllers
 {
     [Area("Admin")]
     public class ProductController : Controller
     {
-        private  readonly IUnitOfWork _unitOfWork;
+        private readonly IUnitOfWork _unitOfWork;
 
         public ProductController(IUnitOfWork unitOfWork)
         {
@@ -24,8 +21,8 @@ namespace BULKYWEB.Areas.Admin.Controllers
             var products = _unitOfWork.Product.GetAll()
                 .OrderBy(x => x.ListPrice)
                 .ToList();
-           
-           
+
+
             return View(products);
         }
 
@@ -33,7 +30,7 @@ namespace BULKYWEB.Areas.Admin.Controllers
 
 
         #region   Create Product
-        public IActionResult Create()
+        public IActionResult UpSert(int? id)
         {
             IEnumerable<SelectListItem> category = _unitOfWork.Category.GetAll().Select(a => new SelectListItem
             {
@@ -46,11 +43,25 @@ namespace BULKYWEB.Areas.Admin.Controllers
                 listItems = category,
                 product = new Product()
             };
-             return View(vm);
+
+            if (id == null || id == 0)
+            {      //create
+                return View(vm);
+            }
+            else
+            {      //update
+                vm.product= _unitOfWork.Product.Get(p => p.Id == id);
+                if( vm.product == null)
+                {
+                    ModelState.AddModelError("product", "Product must be Existed");
+                    return View(vm.product);
+                }
+                return View(vm);
+            }
         }
 
         [HttpPost]
-        public IActionResult Create(ProductVM pro)
+        public IActionResult UpSert(ProductVM pro,IFormFile? file)
         {
             if (!ModelState.IsValid)
             {
@@ -72,7 +83,7 @@ namespace BULKYWEB.Areas.Admin.Controllers
                 return View(pro);
             }
 
-            if(pro.product.ListPrice <= 0)
+            if (pro.product.ListPrice <= 0)
             {
                 ModelState.AddModelError("Price", "Price must be greater than 0.");
                 return View(pro);
@@ -100,22 +111,7 @@ namespace BULKYWEB.Areas.Admin.Controllers
         #endregion
 
 
-        #region Edit Product
-        public IActionResult Edit(int? id)
-        {
-            if(id ==null || id <= 0)
-            {
-                return View();
-            }
-
-            var product = _unitOfWork.Product.Get( p => p.Id == id);
-            if (product == null)
-            {
-                ModelState.AddModelError("product", "Product must be Existed");
-                return View(product);
-            }
-            return View(product);
-        }
+        
 
         [HttpPost]
         public IActionResult Edit(Product pro)
@@ -144,7 +140,7 @@ namespace BULKYWEB.Areas.Admin.Controllers
                 existingProduct.price100 = pro.price100;
                 existingProduct.price = pro.price;
                 existingProduct.Author = pro.Author;
-               
+
 
                 // etc.
 
@@ -158,13 +154,12 @@ namespace BULKYWEB.Areas.Admin.Controllers
                 return View(pro);
             }
         }
-        #endregion
-
+     
 
         #region Delete Product
         public IActionResult Delete(int? id)
         {
-            if(id == 0 || id == null)
+            if (id == 0 || id == null)
             {
                 return NotFound();
             }
