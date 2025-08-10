@@ -1,6 +1,8 @@
 ﻿using Bulky.DataAccess.Repository.IRepository;
 using Bulky.Models.Models;
+using Bulky.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using NuGet.Versioning;
 using System.Configuration;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -22,6 +24,8 @@ namespace BULKYWEB.Areas.Admin.Controllers
             var products = _unitOfWork.Product.GetAll()
                 .OrderBy(x => x.ListPrice)
                 .ToList();
+           
+           
             return View(products);
         }
 
@@ -31,29 +35,49 @@ namespace BULKYWEB.Areas.Admin.Controllers
         #region   Create Product
         public IActionResult Create()
         {
-            return View();
+            IEnumerable<SelectListItem> category = _unitOfWork.Category.GetAll().Select(a => new SelectListItem
+            {
+                Text = a.Name,
+                Value = a.Id.ToString(),
+            });
+
+            ProductVM vm = new ProductVM()
+            {
+                listItems = category,
+                product = new Product()
+            };
+             return View(vm);
         }
 
         [HttpPost]
-        public IActionResult Create(Product pro)
+        public IActionResult Create(ProductVM pro)
         {
             if (!ModelState.IsValid)
             {
                 return View(pro);
             }
+            else
+            {
+                pro.listItems = _unitOfWork.Category.GetAll()
+                    .Select(p => new SelectListItem
+                    {
+                        Text = p.Name,
+                        Value = p.Id.ToString()
+                    });
+            }
 
-            if(string.IsNullOrEmpty(pro.Name))
+            if (string.IsNullOrEmpty(pro.product.Name))
             {
                 ModelState.AddModelError("Name", "Product name cannot be empty.");
                 return View(pro);
             }
 
-            if(pro.ListPrice <= 0)
+            if(pro.product.ListPrice <= 0)
             {
                 ModelState.AddModelError("Price", "Price must be greater than 0.");
                 return View(pro);
             }
-            if (int.TryParse(pro.Name, out _))
+            if (int.TryParse(pro.product.Name, out _))
             {
                 ModelState.AddModelError("Name", "Product name cannot be only numbers.");
                 return View(pro);
@@ -62,7 +86,7 @@ namespace BULKYWEB.Areas.Admin.Controllers
 
             try
             {
-                _unitOfWork.Product.Add(pro);
+                _unitOfWork.Product.Add(pro.product);
                 _unitOfWork.Save();
                 TempData["create"] = "Product created successfully.";
                 return RedirectToAction("Index");
