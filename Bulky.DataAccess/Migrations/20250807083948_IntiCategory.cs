@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace BULKYWEB.Migrations
+namespace Bulky.DataAccess.Data.Migrations
 {
     /// <inheritdoc />
     public partial class IntiCategory : Migration

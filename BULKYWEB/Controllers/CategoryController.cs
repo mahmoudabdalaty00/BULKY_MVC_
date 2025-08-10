@@ -1,5 +1,6 @@
-﻿using BULKYWEB.Data;
-using BULKYWEB.Models;
+﻿
+using Bulky.DataAccess.Data;
+using Bulky.Models.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 

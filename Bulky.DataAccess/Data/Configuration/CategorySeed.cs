@@ -1,8 +1,8 @@
-﻿using BULKYWEB.Models;
+﻿using Bulky.Models.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace BULKYWEB.Data.Configuration
+namespace Bulky.DataAccess.Data.Configuration
 {
     public class CategorySeed : IEntityTypeConfiguration<Category>
     {
