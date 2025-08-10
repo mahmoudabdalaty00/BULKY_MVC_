@@ -1,7 +1,9 @@
 ﻿
 using Bulky.DataAccess.Data;
+using Bulky.DataAccess.Repository.IRepository;
 using Bulky.Models.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 namespace BULKYWEB.Controllers
@@ -9,16 +11,16 @@ namespace BULKYWEB.Controllers
     public class CategoryController : Controller
     {
 
-        private readonly ApplicationDbContext _context;
+        private readonly ICategoryRepository _context;
 
-        public CategoryController(ApplicationDbContext context)
+        public CategoryController(ICategoryRepository context)
         {
             _context = context;
         }
 
         public IActionResult Index()
         {
-            var categories = _context.Categories.ToList();
+            var categories = _context.GetAll();
             return View(categories);
         }
          
@@ -55,7 +57,7 @@ namespace BULKYWEB.Controllers
                 ModelState.AddModelError("", "A Category can not be Number.");
                 return View(categ);
             }
-            var categories = _context.Categories;
+            var categories = _context.GetAll();
             if(categories.Any( c=> c.Name == categ.Name ))
             {
                 ModelState.AddModelError("Name", "A category with this name already exists.");
@@ -64,8 +66,8 @@ namespace BULKYWEB.Controllers
 
             try
             {
-                _context.Categories.Add(categ);
-                _context.SaveChanges();
+                _context.Add(categ);
+                _context.Save();
                 TempData["create"] = "Category Created Successfully";
                 return RedirectToAction("Index");  
             }
@@ -85,7 +87,7 @@ namespace BULKYWEB.Controllers
                 return NotFound();
             }
 
-           var category = _context.Categories
+           var category = _context.GetAll()
                     .FirstOrDefault(c => c.Id == id);
 
             if (category == null)
@@ -120,7 +122,7 @@ namespace BULKYWEB.Controllers
                 ModelState.AddModelError("", "A Category can not be Number.");
                 return View(categ);
             }
-            var categories = _context.Categories;
+            var categories = _context.GetAll();
             if (categories.Any(c => c.Name == categ.Name) && categories.Any(c => c.DisplayOrder == categ.DisplayOrder)) 
             {
                 ModelState.AddModelError("Name", "A category with this name already exists.");
@@ -128,8 +130,10 @@ namespace BULKYWEB.Controllers
             }
             try
             {
-                _context.Categories.Update(categ);
-                _context.SaveChanges();
+              
+
+                _context.Update(categ);
+                _context.Save();
                 TempData["update"] = "Category Updated Successfully";
                 return RedirectToAction("Index");
             }
@@ -149,8 +153,7 @@ namespace BULKYWEB.Controllers
                 return NotFound();
             }
 
-            var category = _context.Categories
-                     .FirstOrDefault(c => c.Id == id);
+            var category = _context.Get(c => c.Id == id);
 
             if (category == null)
             {
@@ -164,13 +167,13 @@ namespace BULKYWEB.Controllers
         {         
             try
             {
-                var categoryFromDb = _context.Categories.Find(categ.Id);
+                var categoryFromDb = _context.Get(c =>c.Id == categ.Id);
                 if (categoryFromDb == null)
                 {
                     return NotFound();
                 }
-                _context.Categories.Remove(categoryFromDb);
-                _context.SaveChanges();
+                _context.Remove(categoryFromDb);
+                _context.Save();
                 TempData["delete"] = "Category Deleted Successfully";
                 return RedirectToAction("Index");
             }
