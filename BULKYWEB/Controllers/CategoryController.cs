@@ -11,16 +11,16 @@ namespace BULKYWEB.Controllers
     public class CategoryController : Controller
     {
 
-        private readonly ICategoryRepository _context;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public CategoryController(ICategoryRepository context)
+        public CategoryController(IUnitOfWork unitOfWork)
         {
-            _context = context;
+            _unitOfWork = unitOfWork;
         }
 
         public IActionResult Index()
         {
-            var categories = _context.GetAll();
+            var categories = _unitOfWork.Category.GetAll();
             return View(categories);
         }
          
@@ -57,7 +57,7 @@ namespace BULKYWEB.Controllers
                 ModelState.AddModelError("", "A Category can not be Number.");
                 return View(categ);
             }
-            var categories = _context.GetAll();
+            var categories = _unitOfWork.Category.GetAll();
             if(categories.Any( c=> c.Name == categ.Name ))
             {
                 ModelState.AddModelError("Name", "A category with this name already exists.");
@@ -66,8 +66,8 @@ namespace BULKYWEB.Controllers
 
             try
             {
-                _context.Add(categ);
-                _context.Save();
+                _unitOfWork.Category.Add(categ);
+                _unitOfWork.Save();
                 TempData["create"] = "Category Created Successfully";
                 return RedirectToAction("Index");  
             }
@@ -87,7 +87,7 @@ namespace BULKYWEB.Controllers
                 return NotFound();
             }
 
-           var category = _context.GetAll()
+           var category = _unitOfWork.Category.GetAll()
                     .FirstOrDefault(c => c.Id == id);
 
             if (category == null)
@@ -122,7 +122,7 @@ namespace BULKYWEB.Controllers
                 ModelState.AddModelError("", "A Category can not be Number.");
                 return View(categ);
             }
-            var categories = _context.GetAll();
+            var categories = _unitOfWork.Category.GetAll();
             if (categories.Any(c => c.Name == categ.Name) && categories.Any(c => c.DisplayOrder == categ.DisplayOrder)) 
             {
                 ModelState.AddModelError("Name", "A category with this name already exists.");
@@ -130,10 +130,10 @@ namespace BULKYWEB.Controllers
             }
             try
             {
-              
 
-                _context.Update(categ);
-                _context.Save();
+
+                _unitOfWork.Category.Update(categ);
+                _unitOfWork.Save();
                 TempData["update"] = "Category Updated Successfully";
                 return RedirectToAction("Index");
             }
@@ -153,7 +153,7 @@ namespace BULKYWEB.Controllers
                 return NotFound();
             }
 
-            var category = _context.Get(c => c.Id == id);
+            var category = _unitOfWork.Category.Get(c => c.Id == id);
 
             if (category == null)
             {
@@ -167,13 +167,13 @@ namespace BULKYWEB.Controllers
         {         
             try
             {
-                var categoryFromDb = _context.Get(c =>c.Id == categ.Id);
+                var categoryFromDb = _unitOfWork.Category.Get(c =>c.Id == categ.Id);
                 if (categoryFromDb == null)
                 {
                     return NotFound();
                 }
-                _context.Remove(categoryFromDb);
-                _context.Save();
+                _unitOfWork.Category.Remove(categoryFromDb);
+                _unitOfWork.Save();
                 TempData["delete"] = "Category Deleted Successfully";
                 return RedirectToAction("Index");
             }
