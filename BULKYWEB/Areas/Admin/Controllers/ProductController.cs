@@ -10,23 +10,22 @@ namespace BULKYWEB.Areas.Admin.Controllers
     public class ProductController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
-
-        public ProductController(IUnitOfWork unitOfWork)
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        public ProductController(IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnvironment)
         {
             _unitOfWork = unitOfWork;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         public IActionResult Index()
         {
-            var products = _unitOfWork.Product.GetAll()
+            var products = _unitOfWork.Product.GetAll(includeProperties:"Category")
                 .OrderBy(x => x.ListPrice)
                 .ToList();
 
 
             return View(products);
         }
-
-
 
 
         #region   Create Product
@@ -50,8 +49,8 @@ namespace BULKYWEB.Areas.Admin.Controllers
             }
             else
             {      //update
-                vm.product= _unitOfWork.Product.Get(p => p.Id == id);
-                if( vm.product == null)
+                vm.product = _unitOfWork.Product.Get(p => p.Id == id);
+                if (vm.product == null)
                 {
                     ModelState.AddModelError("product", "Product must be Existed");
                     return View(vm.product);
@@ -61,57 +60,80 @@ namespace BULKYWEB.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult UpSert(ProductVM pro,IFormFile? file)
+        public async Task<IActionResult> UpSert(ProductVM pro, IFormFile? file)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                return View(pro);
-            }
-            else
-            {
-                pro.listItems = _unitOfWork.Category.GetAll()
-                    .Select(p => new SelectListItem
+                try
+                {
+                    if (file != null && file.Length > 0)
                     {
-                        Text = p.Name,
-                        Value = p.Id.ToString()
-                    });
-            }
-
-            if (string.IsNullOrEmpty(pro.product.Name))
-            {
-                ModelState.AddModelError("Name", "Product name cannot be empty.");
-                return View(pro);
-            }
-
-            if (pro.product.ListPrice <= 0)
-            {
-                ModelState.AddModelError("Price", "Price must be greater than 0.");
-                return View(pro);
-            }
-            if (int.TryParse(pro.product.Name, out _))
-            {
-                ModelState.AddModelError("Name", "Product name cannot be only numbers.");
-                return View(pro);
-            }
+                        string wwwRootPath = _webHostEnvironment.WebRootPath;
+                        string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                        string productPath = Path.Combine(wwwRootPath, "img", "products");
 
 
-            try
-            {
-                _unitOfWork.Product.Add(pro.product);
-                _unitOfWork.Save();
-                TempData["create"] = "Product created successfully.";
-                return RedirectToAction("Index");
+                        if (!Directory.Exists(productPath))
+                        {
+                            Directory.CreateDirectory(productPath);
+                        }
+
+                        //check in update if image exist
+                        if (!string.IsNullOrEmpty(pro.product.ImageUrl))
+                        {
+                            //delete old image
+                            var oldIMagePath = Path.Combine(wwwRootPath, pro.product.ImageUrl
+                                    .TrimStart('\\'));
+
+                            if (System.IO.File.Exists(oldIMagePath))
+                            {
+                                System.IO.File.Delete(oldIMagePath);
+                            }
+
+                        }
+                        using (var fileStream = new FileStream(Path.Combine(productPath, fileName), FileMode.Create))
+                        {
+                            await file.CopyToAsync(fileStream);
+                        }
+
+                        pro.product.ImageUrl = $"/img/products/{fileName}";
+                    }
+
+
+                    if (pro.product.Id == 0)
+                    {
+                        _unitOfWork.Product.Add(pro.product);
+                    }
+                    else
+                    {
+                        _unitOfWork.Product.Update(pro.product);
+                    }
+
+
+                    _unitOfWork.Save();
+
+                    TempData["create"] = "Product created successfully.";
+                    return RedirectToAction("Index");
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("", $"An error occurred while saving the product: {ex.Message}");
+                }
             }
-            catch (Exception ex)
-            {
-                ModelState.AddModelError("", $"An error occurred while saving the product: {ex.Message}");
-                return View(pro);
-            }
+
+            pro.listItems = _unitOfWork.Category.GetAll()
+                .Select(p => new SelectListItem
+                {
+                    Text = p.Name,
+                    Value = p.Id.ToString()
+                });
+
+            return View(pro);
         }
         #endregion
 
 
-        
+
 
         [HttpPost]
         public IActionResult Edit(Product pro)
@@ -154,7 +176,7 @@ namespace BULKYWEB.Areas.Admin.Controllers
                 return View(pro);
             }
         }
-     
+
 
         #region Delete Product
         public IActionResult Delete(int? id)

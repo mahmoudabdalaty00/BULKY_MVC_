@@ -20,14 +20,28 @@ namespace Bulky.DataAccess.Repository.Repositories
 
         public void Update(Product product)
         {
-           var pro = _context.Products.Find(product.Id);
+            var pro = _context.Products.Find(product.Id);
 
             if (pro != null)
             {
-                pro = product;
+                // Update properties individually to avoid replacing the tracked entity reference
+                pro.Name = product.Name;
+                pro.Description = product.Description;
+                pro.ISBN = product.ISBN;
+                pro.Author = product.Author;
+                pro.ListPrice = product.ListPrice;
+                pro.price = product.price;
+                pro.price50 = product.price50;
+                pro.price100 = product.price100;
+                pro.CategoryId = product.CategoryId;
+
+                if (product.ImageUrl != null)
+                {
+                    pro.ImageUrl = product.ImageUrl;
+                }
+                _context.Products.Update(pro);
+                _context.SaveChanges();
             }
-             _context.Update(pro);
-            _context.SaveChanges();
         }
     }
 }

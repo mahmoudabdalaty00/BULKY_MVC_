@@ -20,11 +20,9 @@
         <thead>
             <tr class="table-primary">
                 <th scope="col">Name</th>
-                <th scope="col">ListPrice</th>
                 <th scope="col">Price</th>
-                <th scope="col">Price50</th>
-                <th scope="col">Price100</th>
-                <th scope="col">Stock</th>
+                <th scope="col">Author</th>
+                <th scope="col">ISBM</th>
                 <th scope="col">Category</th>
                 <th></th>
             </tr>
@@ -33,13 +31,11 @@
             @foreach (var p in Model)
             {     
                 <tr>
-                    <td>@p.Name</td>
-                    <td>@p.ListPrice.ToString("C")</td>
+                    <td>@p.Name</td>                   
                     <td>@p.price.ToString("C")</td>
-                    <td>@p.price50.ToString("C")</td>
-                    <td>@p.price100.ToString("C")</td>
-                    <td>@p.ISBN</td>
                     <td>@p.Author</td>
+                    <td>@p.ISBN</td>
+                    <td>@p.Category.Name</td>
                     <td>
                         <div class="w-75 btn-group" role="group">
                             <a asp-controller="Product" asp-action="UpSert" asp-route-id="@p.Id"

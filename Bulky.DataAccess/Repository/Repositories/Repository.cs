@@ -23,16 +23,32 @@ namespace Bulky.DataAccess.Repository.Repositories
             dbSet.Add(entity);
         }
 
-        public IEnumerable<T> GetAll()
+        public IEnumerable<T> GetAll(string? includeProperties = null)
         {
             IQueryable<T> queries = dbSet;
+            if (!string.IsNullOrEmpty(includeProperties))
+            {
+                foreach(var includeProp in  includeProperties
+                    .Split(new char[] {','},StringSplitOptions.RemoveEmptyEntries))
+                {
+                 queries = queries.Include(includeProp);
+                }
+            }
             return queries.ToList();
         }
 
-        public T Get(Expression<Func<T, bool>> expression)
+        public T Get(Expression<Func<T, bool>> expression, string? includeProperties = null)
         {
             IQueryable<T> queries = dbSet;
             var query = queries.Where(expression);
+            if (!string.IsNullOrEmpty(includeProperties))
+            {
+                foreach (var includeProp in includeProperties
+                    .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includeProp);
+                }
+            }
             return query.FirstOrDefault();
         }
 
