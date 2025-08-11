@@ -211,7 +211,8 @@ namespace BULKYWEB.Areas.Admin.Controllers
                 data = products
             });
         }
-       
+
+        [HttpDelete]
         public IActionResult Deletes(int? id)
         {
             var prod = _unitOfWork.Product
