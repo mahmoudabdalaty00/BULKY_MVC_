@@ -28,7 +28,7 @@ namespace BULKYWEB.Areas.Admin.Controllers
         }
 
 
-        #region   Create Product
+        #region   Create||Update Product
         public IActionResult UpSert(int? id)
         {
             IEnumerable<SelectListItem> category = _unitOfWork.Category.GetAll().Select(a => new SelectListItem
@@ -60,124 +60,85 @@ namespace BULKYWEB.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> UpSert(ProductVM pro, IFormFile? file)
+        [ValidateAntiForgeryToken]
+        public IActionResult Upsert(ProductVM pro, IFormFile? file)
         {
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    if (file != null && file.Length > 0)
-                    {
-                        string wwwRootPath = _webHostEnvironment.WebRootPath;
-                        string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-                        string productPath = Path.Combine(wwwRootPath, "img", "products");
-
-
-                        if (!Directory.Exists(productPath))
-                        {
-                            Directory.CreateDirectory(productPath);
-                        }
-
-                        //check in update if image exist
-                        if (!string.IsNullOrEmpty(pro.product.ImageUrl))
-                        {
-                            //delete old image
-                            var oldIMagePath = Path.Combine(wwwRootPath, pro.product.ImageUrl
-                                    .TrimStart('\\'));
-
-                            if (System.IO.File.Exists(oldIMagePath))
-                            {
-                                System.IO.File.Delete(oldIMagePath);
-                            }
-
-                        }
-                        using (var fileStream = new FileStream(Path.Combine(productPath, fileName), FileMode.Create))
-                        {
-                            await file.CopyToAsync(fileStream);
-                        }
-
-                        pro.product.ImageUrl = $"/img/products/{fileName}";
-                    }
-
-
-                    if (pro.product.Id == 0)
-                    {
-                        _unitOfWork.Product.Add(pro.product);
-                    }
-                    else
-                    {
-                        _unitOfWork.Product.Update(pro.product);
-                    }
-
-
-                    _unitOfWork.Save();
-
-                    TempData["create"] = "Product created successfully.";
-                    return RedirectToAction("Index");
-                }
-                catch (Exception ex)
-                {
-                    ModelState.AddModelError("", $"An error occurred while saving the product: {ex.Message}");
-                }
-            }
-
-            pro.listItems = _unitOfWork.Category.GetAll()
-                .Select(p => new SelectListItem
-                {
-                    Text = p.Name,
-                    Value = p.Id.ToString()
-                });
-
-            return View(pro);
-        }
-        #endregion
-
-
-
-
-        [HttpPost]
-        public IActionResult Edit(Product pro)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View(pro);
-            }
-
             try
             {
-                // Fetch the tracked entity
-                var existingProduct = _unitOfWork.Product.Get(p => p.Id == pro.Id);
-                if (existingProduct == null)
+                if (file != null)
                 {
-                    ModelState.AddModelError("product", "Product not found.");
-                    return View(pro);
+                    // Upload new image and delete old one if exists
+                    string newImagePath = UploadImage(file, pro.product.ImageUrl);
+                    pro.product.ImageUrl = newImagePath;
                 }
 
-                // Update fields
-                existingProduct.Name = pro.Name;
-                existingProduct.ListPrice = pro.ListPrice;
-                existingProduct.Description = pro.Description;
-                existingProduct.ISBN = pro.ISBN;
-                existingProduct.price50 = pro.price50;
-                existingProduct.price100 = pro.price100;
-                existingProduct.price = pro.price;
-                existingProduct.Author = pro.Author;
-
-
-                // etc.
+                if (pro.product.Id == 0)
+                    _unitOfWork.Product.Add(pro.product);
+                else
+                    _unitOfWork.Product.Update(pro.product);
 
                 _unitOfWork.Save();
-                TempData["update"] = "Product Updated Successfully";
-                return RedirectToAction("Index");
+                TempData["success"] = "Product saved successfully";
+                return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("", $"An error occurred while saving the product: {ex.Message}");
-                return View(pro);
+                ModelState.AddModelError("", $"Error: {ex.Message}");
             }
+
+            pro.listItems = GetCategorySelectList();
+            return View(pro);
+        }
+        #endregion
+      
+        #region Image Methods 
+        private string UploadImage(IFormFile file, string? oldImageUrl)
+        {
+            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
+            var ext = Path.GetExtension(file.FileName).ToLower();
+
+            if (!allowedExtensions.Contains(ext))
+                throw new InvalidOperationException("Invalid file type");
+
+            string wwwRootPath = _webHostEnvironment.WebRootPath;
+            string fileName = Guid.NewGuid() + ext;
+            string uploadPath = Path.Combine(wwwRootPath, @"img\products");
+
+            // Ensure folder exists
+            if (!Directory.Exists(uploadPath))
+                Directory.CreateDirectory(uploadPath);
+
+            // Delete old image if updating
+            DeleteImage(oldImageUrl);
+
+            using (var fs = new FileStream(Path.Combine(uploadPath, fileName), FileMode.Create))
+            {
+                file.CopyTo(fs);
+            }
+
+            return @"\img\products\" + fileName;
         }
 
+        private void DeleteImage(string? imageUrl)
+        {
+            if (string.IsNullOrEmpty(imageUrl)) return;
 
+            string fullPath = Path.Combine(_webHostEnvironment.WebRootPath, imageUrl.TrimStart('\\'));
+            if (System.IO.File.Exists(fullPath))
+                System.IO.File.Delete(fullPath);
+        }
+
+        private IEnumerable<SelectListItem> GetCategorySelectList()
+        {
+            return _unitOfWork.Category.GetAll().Select(c => new SelectListItem
+            {
+                Text = c.Name,
+                Value = c.Id.ToString()
+            });
+        }
+
+        #endregion
+    
         #region Delete Product
         public IActionResult Delete(int? id)
         {
