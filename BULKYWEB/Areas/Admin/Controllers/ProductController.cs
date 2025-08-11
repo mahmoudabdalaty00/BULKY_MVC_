@@ -19,14 +19,13 @@ namespace BULKYWEB.Areas.Admin.Controllers
 
         public IActionResult Index()
         {
-            var products = _unitOfWork.Product.GetAll(includeProperties:"Category")
+            var products = _unitOfWork.Product.GetAll(includeProperties: "Category")
                 .OrderBy(x => x.ListPrice)
                 .ToList();
 
 
             return View(products);
         }
-
 
         #region   Create||Update Product
         public IActionResult UpSert(int? id)
@@ -90,7 +89,7 @@ namespace BULKYWEB.Areas.Admin.Controllers
             return View(pro);
         }
         #endregion
-      
+
         #region Image Methods 
         private string UploadImage(IFormFile file, string? oldImageUrl)
         {
@@ -138,7 +137,7 @@ namespace BULKYWEB.Areas.Admin.Controllers
         }
 
         #endregion
-    
+
         #region Delete Product
         public IActionResult Delete(int? id)
         {
@@ -148,11 +147,26 @@ namespace BULKYWEB.Areas.Admin.Controllers
             }
             var product =
                     _unitOfWork.Product.Get(u => u.Id == id);
+
+
+
             if (product == null)
             {
                 throw new Exception($"Cannot Find Category With this Id :{id}");
             }
             return View(product);
+        }
+
+        private void DeletetImage(Product product)
+        {
+            if (!string.IsNullOrEmpty(product.ImageUrl))
+            {
+                var oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, product.ImageUrl.TrimStart('\\'));
+                if (System.IO.File.Exists(oldImagePath))
+                {
+                    System.IO.File.Delete(oldImagePath);
+                }
+            }
         }
 
         [HttpPost]
@@ -167,6 +181,7 @@ namespace BULKYWEB.Areas.Admin.Controllers
                 {
                     return NotFound();
                 }
+                DeletetImage(pro);
                 _unitOfWork.Product.Remove(prod);
                 _unitOfWork.Save();
                 TempData["delete"] = "Category Deleted Successfully";
@@ -183,5 +198,23 @@ namespace BULKYWEB.Areas.Admin.Controllers
 
         #endregion
 
+
+
+        #region Api Calls
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            var products = _unitOfWork.Product.GetAll(includeProperties: "Category")
+              .OrderBy(x => x.ListPrice)
+              .ToList();
+
+            return Json(new
+            {
+                 data = products
+            });
+        }
+
+
+        #endregion
     }
 }

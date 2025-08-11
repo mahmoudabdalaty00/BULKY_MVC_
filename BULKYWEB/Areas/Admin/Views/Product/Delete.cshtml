@@ -1,73 +1,87 @@
 ﻿@model Product
 
 <form action="Delete" method="post">
-    <div class="border border-2 border-secondary p-5">
-        <div class="row pb-2">
-            <h2 class="text-primary">Edit Product</h2>
-            <hr class="border-2 border-dark" />
-        </div>
+    <div class="row">
+        <div class="col-10">
 
-        <div asp-validation-summary="All"></div>
+            <div class="border border-2 border-secondary p-5">
+                <div class="row pb-2">
+                    <h2 class="text-primary">Delete Product</h2>
+                    <hr class="border-2 border-dark" />
+                </div>
 
-        <input asp-for="Id" hidden />
+                <div asp-validation-summary="All"></div>
 
-        <div class="mb-3 pt-1 pb-1 row">
-            <label class="form-label">Product Name</label>
-            <input readonly asp-for="Name" type="text" class="form-control" />
-            <span asp-validation-for="Name" class="text-danger"></span>
-        </div>
+                <input asp-for="Id" hidden />
 
-        <div class="mb-3 pt-1 pb-1 row">
-            <label class="form-label">Description</label>
-            <textarea readonly asp-for="Description" class="form-control"></textarea>
-            <span asp-validation-for="Description" class="text-danger"></span>
-        </div>
+                <div class="mb-3 pt-1 pb-1 row">
+                    <label class="form-label">Product Name</label>
+                    <input readonly asp-for="Name" type="text" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
 
-        <div class="mb-3 pt-1 pb-1 row">
-            <label class="form-label">ISBN</label>
-            <input readonly asp-for="ISBN" type="text" class="form-control" />
-            <span asp-validation-for="ISBN" class="text-danger"></span>
-        </div>
+                <div class="mb-3 pt-1 pb-1 row">
+                    <label class="form-label">Description</label>
+                    <textarea readonly asp-for="Description" class="form-control"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
 
-        <div class="mb-3 pt-1 pb-1 row">
-            <label class="form-label">Author</label>
-            <input readonly asp-for="Author" type="text" class="form-control" />
-            <span asp-validation-for="Author" class="text-danger"></span>
-        </div>
+                <div class="mb-3 pt-1 pb-1 row">
+                    <label class="form-label">ISBN</label>
+                    <input readonly asp-for="ISBN" type="text" class="form-control" />
+                    <span asp-validation-for="ISBN" class="text-danger"></span>
+                </div>
 
-        <div class="mb-3 pt-1 pb-1 row">
-            <label class="form-label">List Price</label>
-            <input readonly asp-for="ListPrice" type="number" step="0.01" class="form-control" />
-            <span asp-validation-for="ListPrice" class="text-danger"></span>
-        </div>
+                <div class="mb-3 pt-1 pb-1 row">
+                    <label class="form-label">Author</label>
+                    <input readonly asp-for="Author" type="text" class="form-control" />
+                    <span asp-validation-for="Author" class="text-danger"></span>
+                </div>
 
-        <div class="mb-3 pt-1 pb-1 row">
-            <label class="form-label">Price (1–50)</label>
-            <input readonly asp-for="price" type="number" step="0.01" class="form-control" />
-            <span asp-validation-for="price" class="text-danger"></span>
-        </div>
+                <div class="mb-3 pt-1 pb-1 row">
+                    <label class="form-label">List Price</label>
+                    <input readonly asp-for="ListPrice" type="number" step="0.01" class="form-control" />
+                    <span asp-validation-for="ListPrice" class="text-danger"></span>
+                </div>
 
-        <div class="mb-3 pt-1 pb-1 row">
-            <label class="form-label">Price (50+)</label>
-            <input readonly asp-for="price50" type="number" step="0.01" class="form-control" />
-            <span asp-validation-for="price50" class="text-danger"></span>
-        </div>
+                <div class="mb-3 pt-1 pb-1 row">
+                    <label class="form-label">Price (1–50)</label>
+                    <input readonly asp-for="price" type="number" step="0.01" class="form-control" />
+                    <span asp-validation-for="price" class="text-danger"></span>
+                </div>
 
-        <div class="mb-3 pt-1 pb-1 row">
-            <label class="form-label">Price (100+)</label>
-            <input readonly asp-for="price100" type="number" step="0.01" class="form-control" />
-            <span asp-validation-for="price100" class="text-danger"></span>
-        </div>
+                <div class="mb-3 pt-1 pb-1 row">
+                    <label class="form-label">Price (50+)</label>
+                    <input readonly asp-for="price50" type="number" step="0.01" class="form-control" />
+                    <span asp-validation-for="price50" class="text-danger"></span>
+                </div>
 
-        <div class="row">
-            <div class="col-6 col-md-3">
-                <button type="submit" class="btn btn-primary form-control">Delete</button>
+                <div class="mb-3 pt-1 pb-1 row">
+                    <label class="form-label">Price (100+)</label>
+                    <input readonly asp-for="price100" type="number" step="0.01" class="form-control" />
+                    <span asp-validation-for="price100" class="text-danger"></span>
+                </div>
+
+                <div class="row">
+                    <div class="col-6 col-md-3">
+                        <button type="submit" class="btn btn-danger form-control">Delete</button>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <a asp-controller="Product" asp-action="Index" class="btn btn-secondary border form-control">Back to Product List</a>
+                    </div>
+                </div>
             </div>
-            <div class="col-6 col-md-3">
-                <a asp-controller="Product" asp-action="Index" class="btn btn-secondary border form-control">Back to Product List</a>
-            </div>
+b
+        </div>
+        <div class="col-2">
+
+            <img src="@Model.ImageUrl" alt="Alternate Text"
+                 style="width:100%; border-radius:5px; border:1px solid #bbb9b9" />
+
+
         </div>
     </div>
+    
 </form>
 
 @section Scripts {
