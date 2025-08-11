@@ -157,7 +157,7 @@ namespace BULKYWEB.Areas.Admin.Controllers
             return View(product);
         }
 
-        private void DeletetImage(Product product)
+        private void DeletedImage(Product product)
         {
             if (!string.IsNullOrEmpty(product.ImageUrl))
             {
@@ -181,7 +181,7 @@ namespace BULKYWEB.Areas.Admin.Controllers
                 {
                     return NotFound();
                 }
-                DeletetImage(pro);
+                DeletedImage(pro);
                 _unitOfWork.Product.Remove(prod);
                 _unitOfWork.Save();
                 TempData["delete"] = "Category Deleted Successfully";
@@ -197,9 +197,7 @@ namespace BULKYWEB.Areas.Admin.Controllers
         }
 
         #endregion
-
-
-
+           
         #region Api Calls
         [HttpGet]
         public IActionResult GetAll()
@@ -210,10 +208,33 @@ namespace BULKYWEB.Areas.Admin.Controllers
 
             return Json(new
             {
-                 data = products
+                data = products
             });
         }
+       
+        public IActionResult Deletes(int? id)
+        {
+            var prod = _unitOfWork.Product
+                    .Get(p => p.Id == id);
+             if(prod == null)
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = "Error While Deleting"
+                });
+            }
 
+            DeletedImage(prod);
+            _unitOfWork.Product.Remove(prod);
+            _unitOfWork.Save();
+
+            return Json(new
+            {
+                success = true,
+                message = "Success To Deleting"
+            });
+        }
 
         #endregion
     }
