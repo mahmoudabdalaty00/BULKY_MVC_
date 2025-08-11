@@ -4,6 +4,8 @@ using Bulky.DataAccess.Repository.IRepository;
 using Bulky.DataAccess.Repository.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using Blky.Utility;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,9 +19,10 @@ builder.Services.AddDbContext<ApplicationDbContext>(o =>
   o.UseSqlServer(connectionString)
 );
 
-builder.Services.AddDefaultIdentity<IdentityUser>(
+builder.Services.AddIdentity<IdentityUser,IdentityRole>(
     options => options.SignIn.RequireConfirmedAccount = true)
-        .AddEntityFrameworkStores<ApplicationDbContext>();
+        .AddEntityFrameworkStores<ApplicationDbContext>()
+        .AddDefaultTokenProviders();
 
 builder.Services.AddRazorPages();
 
@@ -27,6 +30,7 @@ builder.Services.AddRazorPages();
 
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IEmailSender, EmailSender>();
 
 
 
