@@ -35,4 +35,5 @@ namespace Bulky.DataAccess.Data.Configuration
 );
         }
     }
+
 }

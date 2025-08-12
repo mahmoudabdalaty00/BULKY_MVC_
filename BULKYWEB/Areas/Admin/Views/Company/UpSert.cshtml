@@ -1,0 +1,99 @@
+﻿@model Company
+
+<div class="card shadow border-0 mt-4">
+    <div class="card-header bg-secondary bg-gradient m-lg-0 py-3">
+        <div class="row">
+            <div class="text-center col-12">
+                <h2 class="text-primary">@(Model.Id !=0?"Update" : "Create")Comapny</h2>
+            </div>
+        </div>
+    </div>
+    <div class="card-body p-4 ">
+
+        <form asp-action="UpSert" method="post" enctype="multipart/form-data">
+
+            <div class="row">
+                <div class="col-10">
+                    <div class="border border-2 border-secondary p-5 ">
+                        <div class="row pb-2">
+                            <hr class="border-2 border-dark" />
+                        </div>
+
+                        <div asp-validation-summary="All" class="text-danger"></div>
+                        <input asp-for="Id" class="form-control" hidden />
+                        
+
+                        <div class="mb-3 pt-1 pb-1 row">
+                            <label class="form-label">Product Name</label>
+                            <input readonly asp-for="Name" type="text" class="form-control" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3 pt-1 pb-1 row">
+                            <label class="form-label">Email</label>
+                            <input readonly asp-for="Email" type="text" class="form-control" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3 pt-1 pb-1 row">
+                            <label class="form-label">City</label>
+                            <input readonly asp-for="City" type="text" class="form-control" />
+                            <span asp-validation-for="City" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3 pt-1 pb-1 row">
+                            <label class="form-label">State</label>
+                            <input readonly asp-for="State" type="text" class="form-control" />
+                            <span asp-validation-for="State" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3 pt-1 pb-1 row">
+                            <label class="form-label">StreetAddress</label>
+                            <input readonly asp-for="StreetAddress" type="text"   class="form-control" />
+                            <span asp-validation-for="StreetAddress" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3 pt-1 pb-1 row">
+                            <label class="form-label">Postal Code</label>
+                            <input readonly asp-for="PostalCode" type="number"  class="form-control" />
+                            <span asp-validation-for="PostalCode" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3 pt-1 pb-1 row">
+                            <label class="form-label">Phone Number</label>
+                            <input readonly asp-for="PhoneNumber" type="text"  class="form-control" />
+                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                        </div>
+                        <div class="row">
+                            <div class="col-6 col-md-3">
+                                @if (Model.Id == 0)
+                                {
+                                    <button type="submit" class="btn btn-primary form-control">Create</button>
+                                }
+                                else
+                                {
+                                    <button type="submit" class="btn btn-primary form-control">Update</button>
+                                }
+
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <a asp-controller="Company" asp-action="Index"
+                                   class="btn btn-secondary border form-control">Back to Product List</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </form>
+
+    </div>
+</div>
+
+@section Scripts {
+
+    <script>
+        
+    </script>
+    <partial name="_ValidationScriptsPartial" />
+}

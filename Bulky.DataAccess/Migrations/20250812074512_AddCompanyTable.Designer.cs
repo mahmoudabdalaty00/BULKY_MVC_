@@ -4,6 +4,7 @@ using Bulky.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Bulky.DataAccess.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250812074512_AddCompanyTable")]
+    partial class AddCompanyTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -137,173 +140,6 @@ namespace Bulky.DataAccess.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Companies");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            City = "Springfield",
-                            Email = "contact@acmesolutions.com",
-                            Name = "Acme Solutions",
-                            PhoneNumber = "217-555-0101",
-                            PostalCode = "62701",
-                            State = "IL",
-                            StreetAddress = "123 Maple St"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            City = "Denver",
-                            Email = "info@brightfuturetech.com",
-                            Name = "Bright Future Tech",
-                            PhoneNumber = "303-555-0202",
-                            PostalCode = "80202",
-                            State = "CO",
-                            StreetAddress = "456 Oak Ave"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            City = "Austin",
-                            Email = "support@nexusenterprises.com",
-                            Name = "Nexus Enterprises",
-                            PhoneNumber = "512-555-0303",
-                            PostalCode = "78701",
-                            State = "TX",
-                            StreetAddress = "789 Pine Rd"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            City = "Seattle",
-                            Email = "hello@horizoninnovations.com",
-                            Name = "Horizon Innovations",
-                            PhoneNumber = "206-555-0404",
-                            PostalCode = "98101",
-                            State = "WA",
-                            StreetAddress = "101 Birch Ln"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            City = "Boston",
-                            Email = "contact@pinnaclesystems.com",
-                            Name = "Pinnacle Systems",
-                            PhoneNumber = "617-555-0505",
-                            PostalCode = "02108",
-                            State = "MA",
-                            StreetAddress = "234 Cedar Dr"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            City = "Chicago",
-                            Email = "info@summitconsulting.com",
-                            Name = "Summit Consulting",
-                            PhoneNumber = "312-555-0606",
-                            PostalCode = "60601",
-                            State = "IL",
-                            StreetAddress = "567 Elm St"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            City = "Portland",
-                            Email = "support@vanguardsolutions.com",
-                            Name = "Vanguard Solutions",
-                            PhoneNumber = "503-555-0707",
-                            PostalCode = "97201",
-                            State = "OR",
-                            StreetAddress = "890 Walnut Ave"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            City = "Miami",
-                            Email = "contact@apexdynamics.com",
-                            Name = "Apex Dynamics",
-                            PhoneNumber = "305-555-0808",
-                            PostalCode = "33101",
-                            State = "FL",
-                            StreetAddress = "321 Spruce Way"
-                        },
-                        new
-                        {
-                            Id = 9,
-                            City = "Phoenix",
-                            Email = "info@quantumventures.com",
-                            Name = "Quantum Ventures",
-                            PhoneNumber = "602-555-0909",
-                            PostalCode = "85001",
-                            State = "AZ",
-                            StreetAddress = "654 Sycamore St"
-                        },
-                        new
-                        {
-                            Id = 10,
-                            City = "Atlanta",
-                            Email = "hello@coreinnovations.com",
-                            Name = "Core Innovations",
-                            PhoneNumber = "404-555-1010",
-                            PostalCode = "30301",
-                            State = "GA",
-                            StreetAddress = "987 Magnolia Blvd"
-                        },
-                        new
-                        {
-                            Id = 11,
-                            City = "Houston",
-                            Email = "support@strivetech.com",
-                            Name = "Strive Technologies",
-                            PhoneNumber = "713-555-1111",
-                            PostalCode = "77002",
-                            State = "TX",
-                            StreetAddress = "147 Chestnut Dr"
-                        },
-                        new
-                        {
-                            Id = 12,
-                            City = "San Francisco",
-                            Email = "contact@optimagroup.com",
-                            Name = "Optima Group",
-                            PhoneNumber = "415-555-1212",
-                            PostalCode = "94102",
-                            State = "CA",
-                            StreetAddress = "258 Willow Ln"
-                        },
-                        new
-                        {
-                            Id = 13,
-                            City = "New York",
-                            Email = "info@nextgensolutions.com",
-                            Name = "NextGen Solutions",
-                            PhoneNumber = "212-555-1313",
-                            PostalCode = "10001",
-                            State = "NY",
-                            StreetAddress = "369 Laurel St"
-                        },
-                        new
-                        {
-                            Id = 14,
-                            City = "Los Angeles",
-                            Email = "support@eliteenterprises.com",
-                            Name = "Elite Enterprises",
-                            PhoneNumber = "323-555-1414",
-                            PostalCode = "90001",
-                            State = "CA",
-                            StreetAddress = "741 Poplar Ave"
-                        },
-                        new
-                        {
-                            Id = 15,
-                            City = "Dallas",
-                            Email = "hello@fusiondynamics.com",
-                            Name = "Fusion Dynamics",
-                            PhoneNumber = "214-555-1515",
-                            PostalCode = "75201",
-                            State = "TX",
-                            StreetAddress = "852 Ash Rd"
-                        });
                 });
 
             modelBuilder.Entity("Bulky.Models.Models.Product", b =>
