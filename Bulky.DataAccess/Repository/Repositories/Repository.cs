@@ -37,9 +37,18 @@ namespace Bulky.DataAccess.Repository.Repositories
             return queries.ToList();
         }
 
-        public T Get(Expression<Func<T, bool>> expression, string? includeProperties = null)
+        public T Get(Expression<Func<T, bool>> expression, string? includeProperties = null, bool tracked = false)
         {
-            IQueryable<T> queries = dbSet;
+            IQueryable<T> queries;
+            if (tracked)
+            {
+                queries = dbSet;               
+            }
+            else
+            {
+                queries = dbSet.AsNoTracking();             
+            }
+
             var query = queries.Where(expression);
             if (!string.IsNullOrEmpty(includeProperties))
             {
@@ -50,6 +59,7 @@ namespace Bulky.DataAccess.Repository.Repositories
                 }
             }
             return query.FirstOrDefault();
+
         }
 
         public void Remove(T entity)
