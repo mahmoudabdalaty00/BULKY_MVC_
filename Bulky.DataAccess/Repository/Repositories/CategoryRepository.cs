@@ -1,7 +1,6 @@
 ﻿using Bulky.DataAccess.Data;
 using Bulky.DataAccess.Repository.IRepository;
 using Bulky.Models.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace Bulky.DataAccess.Repository.Repositories
 {
@@ -29,6 +28,5 @@ namespace Bulky.DataAccess.Repository.Repositories
             }
         }
     }
-
 
 }
