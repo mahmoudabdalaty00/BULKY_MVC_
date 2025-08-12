@@ -24,7 +24,7 @@ namespace BULKYWEB.Areas.Customer.Controllers
         public IActionResult Index()
         {
             var prodList = _unitOfWork.Product
-                     .GetAll("Category");
+                     .GetAll(includeProperties:"Category");
             return View(prodList);
         }
 
