@@ -1,4 +1,5 @@
-﻿using Bulky.DataAccess.Repository.IRepository;
+﻿using Blky.Utility;
+using Bulky.DataAccess.Repository.IRepository;
 using Bulky.Models.Models;
 using Bulky.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -12,12 +13,16 @@ namespace BULKYWEB.Areas.Customer.Controllers
     public class ShoppingCartController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
+        [BindProperty]
         public ShoppingCartVM ShoppingCartVM { get; set; }
 
         public ShoppingCartController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
+
+
+        #region  Finished
 
         public IActionResult Index()
         {
@@ -68,8 +73,8 @@ namespace BULKYWEB.Areas.Customer.Controllers
             ShoppingCartVM.orderHeader.City = ShoppingCartVM.orderHeader.ApplicationUser.City;
             ShoppingCartVM.orderHeader.State = ShoppingCartVM.orderHeader.ApplicationUser.State;
             ShoppingCartVM.orderHeader.PostalCode = ShoppingCartVM.orderHeader.ApplicationUser.PostalCode;
-             
-      
+
+
             foreach (var cart in ShoppingCartVM.shoppingCartsList)
             {
                 cart.Price = GetPriceBasedInQuentity(cart);
@@ -80,7 +85,93 @@ namespace BULKYWEB.Areas.Customer.Controllers
 
             return View(ShoppingCartVM);
         }
+        #endregion
 
+
+
+        [HttpPost]
+        [ActionName("Summery")]
+        public IActionResult SummeryPost()
+        {
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized(); // Handle missing user ID
+            }
+
+            ShoppingCartVM.shoppingCartsList = _unitOfWork.ShoppingCart
+                .GetAll(u => u.ApplicationUserId == userId, includeProperties: "Product");
+
+            ApplicationUser appUser = _unitOfWork
+                .ApplicationUser.Get(u => u.Id == userId);
+
+            if (appUser == null)
+            {
+                return NotFound("User not found");
+            }
+
+            // Ensure OrderHeader is initialized properly
+            ShoppingCartVM.orderHeader.ApplicationUserId = userId;
+            ShoppingCartVM.orderHeader.OrderDate = DateTime.Now; // Set required fields
+
+            foreach (var cart in ShoppingCartVM.shoppingCartsList)
+            {
+                cart.Price = GetPriceBasedInQuentity(cart);
+                ShoppingCartVM.orderHeader.OrderTotal += (cart.Price * cart.Count);
+            }
+
+            if (appUser.CompanyId.GetValueOrDefault() == 0)
+            {
+                ShoppingCartVM.orderHeader.PaymentStatus = SD.PaymentStatusPending;
+                ShoppingCartVM.orderHeader.OrderStatus = SD.StatusPending;
+            }
+            else
+            {
+                ShoppingCartVM.orderHeader.PaymentStatus = SD.PaymentStatusApprovedForDeployPayments;
+                ShoppingCartVM.orderHeader.OrderStatus = SD.StatusApproved;
+            }
+
+            
+                _unitOfWork.OrderHeader.Add(ShoppingCartVM.orderHeader);
+                _unitOfWork.Save();
+
+                foreach (var cart in ShoppingCartVM.shoppingCartsList)
+                {
+                    OrderDetail orderDetail = new OrderDetail
+                    {
+                        ProductId = cart.ProductId,
+                        orderHeaderId = ShoppingCartVM.orderHeader.Id,
+                        Price = cart.Price,
+                        count = cart.Count
+                    };
+                    _unitOfWork.OrderDetail.Add(orderDetail);
+                }
+                _unitOfWork.Save();
+                
+            
+
+            return RedirectToAction(nameof(OrderConfirmation), new
+            {
+                id = ShoppingCartVM.orderHeader.Id
+            });
+        }
+
+
+
+        public IActionResult OrderConfirmation(int id)
+        {
+            return View(id);
+        }
+
+
+
+
+
+
+
+        #region Finished
         public IActionResult Plus(int id)
         {
             var cartDb = _unitOfWork.ShoppingCart
@@ -149,8 +240,8 @@ namespace BULKYWEB.Areas.Customer.Controllers
                 }
             }
         }
-   
-    
-    
+        #endregion
+
+
     }
 }
