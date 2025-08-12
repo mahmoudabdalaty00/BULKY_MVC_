@@ -19,7 +19,7 @@ namespace Bulky.DataAccess.Repository.Repositories
         }
 
         public void Add(T entity)
-        {
+        {     
             dbSet.Add(entity);
         }
 

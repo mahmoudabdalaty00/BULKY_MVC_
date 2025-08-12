@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
 
 namespace BULKYWEB.Areas.Admin.Controllers
 {
@@ -39,7 +40,13 @@ namespace BULKYWEB.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Create(Category categ )
         {
-            if(!ModelState.IsValid)
+
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var ApplicationUser = _unitOfWork.ApplicationUser
+                               .Get(a => a.Id == userId);
+
+            if (!ModelState.IsValid)
             {
                 return View(categ);
             }
@@ -70,6 +77,12 @@ namespace BULKYWEB.Areas.Admin.Controllers
 
             try
             {
+                categ.CreatedAt = DateTime.Now;
+                categ.UpdatedAt = DateTime.Now;
+                categ.CreatedBy = ApplicationUser.Name;
+                categ.UpdatedBy = ApplicationUser.Name;
+               
+
                 _unitOfWork.Category.Add(categ);
                 _unitOfWork.Save();
                 TempData["create"] = "Category Created Successfully";
@@ -103,6 +116,14 @@ namespace BULKYWEB.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Edit(Category categ)
         {
+
+
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var ApplicationUser = _unitOfWork.ApplicationUser
+                               .Get(a => a.Id == userId);
+
+
             if (!ModelState.IsValid)
             {
                 return View(categ);
@@ -133,8 +154,9 @@ namespace BULKYWEB.Areas.Admin.Controllers
             }
             try
             {
-
-
+                categ.UpdatedBy = ApplicationUser.Name;
+                categ.UpdatedAt = DateTime.Now;
+  
                 _unitOfWork.Category.Update(categ);
                 _unitOfWork.Save();
                 TempData["update"] = "Category Updated Successfully";

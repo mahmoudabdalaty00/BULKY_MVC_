@@ -34,7 +34,7 @@ namespace Bulky.DataAccess.Repository.Repositories
                 pro.price50 = product.price50;
                 pro.price100 = product.price100;
                 pro.CategoryId = product.CategoryId;
-
+                pro.UpdatedAt = DateTime.UtcNow;
                 if (product.ImageUrl != null)
                 {
                     pro.ImageUrl = product.ImageUrl;

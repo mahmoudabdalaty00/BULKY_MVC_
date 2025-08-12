@@ -4,10 +4,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Bulky.Models.Models
 {
-    public class Product
+    public class Product : BaseEntity
     {
-        [Key]
-        public int Id { get; set; }
+    
         [Required]
         public string Name { get; set; }
 
@@ -45,5 +44,12 @@ namespace Bulky.Models.Models
 
         [ValidateNever]
         public string ImageUrl { get; set; }
+
+
+
+
+        [NotMapped]
+        public bool IsHidden { get; set; } = false; 
+
     }
 }

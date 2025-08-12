@@ -4,6 +4,7 @@ using Bulky.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Bulky.DataAccess.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250812131945_UpdateCategory")]
+    partial class UpdateCategory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,12 +33,6 @@ namespace Bulky.DataAccess.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime?>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("DisplayOrder")
                         .HasColumnType("int");
 
@@ -44,12 +41,6 @@ namespace Bulky.DataAccess.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UpdatedBy")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -61,70 +52,70 @@ namespace Bulky.DataAccess.Data.Migrations
                         {
                             Id = 1,
                             DisplayOrder = 1,
-                            IsHidden = false,
+                            IsHidden = true,
                             Name = "Electronics"
                         },
                         new
                         {
                             Id = 2,
                             DisplayOrder = 2,
-                            IsHidden = false,
+                            IsHidden = true,
                             Name = "Books"
                         },
                         new
                         {
                             Id = 3,
                             DisplayOrder = 3,
-                            IsHidden = false,
+                            IsHidden = true,
                             Name = "Clothing"
                         },
                         new
                         {
                             Id = 4,
                             DisplayOrder = 4,
-                            IsHidden = false,
+                            IsHidden = true,
                             Name = "Home & Kitchen"
                         },
                         new
                         {
                             Id = 5,
                             DisplayOrder = 5,
-                            IsHidden = false,
+                            IsHidden = true,
                             Name = "Toys"
                         },
                         new
                         {
                             Id = 6,
                             DisplayOrder = 6,
-                            IsHidden = false,
+                            IsHidden = true,
                             Name = "Sports"
                         },
                         new
                         {
                             Id = 7,
                             DisplayOrder = 7,
-                            IsHidden = false,
+                            IsHidden = true,
                             Name = "Health"
                         },
                         new
                         {
                             Id = 8,
                             DisplayOrder = 8,
-                            IsHidden = false,
+                            IsHidden = true,
                             Name = "Beauty"
                         },
                         new
                         {
                             Id = 9,
                             DisplayOrder = 9,
-                            IsHidden = false,
+                            IsHidden = true,
                             Name = "Automotive"
                         },
                         new
                         {
                             Id = 10,
                             DisplayOrder = 10,
-                            IsHidden = false,
+                            IsHidden = true,
                             Name = "Music"
                         });
                 });
@@ -448,18 +439,9 @@ namespace Bulky.DataAccess.Data.Migrations
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("DisplayOrder")
-                        .HasColumnType("int");
 
                     b.Property<string>("ISBN")
                         .IsRequired()
@@ -474,12 +456,6 @@ namespace Bulky.DataAccess.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UpdatedBy")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("price")
@@ -504,7 +480,6 @@ namespace Bulky.DataAccess.Data.Migrations
                             Author = "Jon Skeet",
                             CategoryId = 2,
                             Description = "Advanced guide to C# programming.",
-                            DisplayOrder = 0,
                             ISBN = "9781617294532",
                             ImageUrl = "",
                             ListPrice = 59.990000000000002,
@@ -519,7 +494,6 @@ namespace Bulky.DataAccess.Data.Migrations
                             Author = "Andrew Lock",
                             CategoryId = 2,
                             Description = "Comprehensive guide to building web apps with ASP.NET Core.",
-                            DisplayOrder = 0,
                             ISBN = "9781617294617",
                             ImageUrl = "",
                             ListPrice = 64.989999999999995,
@@ -534,7 +508,6 @@ namespace Bulky.DataAccess.Data.Migrations
                             Author = "Robert C. Martin",
                             CategoryId = 2,
                             Description = "A Handbook of Agile Software Craftsmanship.",
-                            DisplayOrder = 0,
                             ISBN = "9780132350884",
                             ImageUrl = "",
                             ListPrice = 49.990000000000002,
@@ -549,7 +522,6 @@ namespace Bulky.DataAccess.Data.Migrations
                             Author = "Erich Gamma et al.",
                             CategoryId = 2,
                             Description = "Elements of Reusable Object-Oriented Software.",
-                            DisplayOrder = 0,
                             ISBN = "9780201633610",
                             ImageUrl = "",
                             ListPrice = 54.990000000000002,
@@ -564,7 +536,6 @@ namespace Bulky.DataAccess.Data.Migrations
                             Author = "Andrew Hunt & David Thomas",
                             CategoryId = 2,
                             Description = "Your Journey to Mastery.",
-                            DisplayOrder = 0,
                             ISBN = "9780135957059",
                             ImageUrl = "",
                             ListPrice = 44.990000000000002,
@@ -579,7 +550,6 @@ namespace Bulky.DataAccess.Data.Migrations
                             Author = "Adam Freeman",
                             CategoryId = 2,
                             Description = "Best practices and performance optimization for EF Core.",
-                            DisplayOrder = 0,
                             ISBN = "9781484287486",
                             ImageUrl = "",
                             ListPrice = 69.989999999999995,
@@ -594,7 +564,6 @@ namespace Bulky.DataAccess.Data.Migrations
                             Author = "Douglas Crockford",
                             CategoryId = 2,
                             Description = "Deep dive into the best features of JavaScript.",
-                            DisplayOrder = 0,
                             ISBN = "9780596517748",
                             ImageUrl = "",
                             ListPrice = 39.990000000000002,
@@ -609,7 +578,6 @@ namespace Bulky.DataAccess.Data.Migrations
                             Author = "Kyle Simpson",
                             CategoryId = 2,
                             Description = "Understanding JavaScript deeply.",
-                            DisplayOrder = 0,
                             ISBN = "9781098124045",
                             ImageUrl = "",
                             ListPrice = 34.990000000000002,
@@ -624,7 +592,6 @@ namespace Bulky.DataAccess.Data.Migrations
                             Author = "Alan Beaulieu",
                             CategoryId = 2,
                             Description = "Master SQL for data management and analysis.",
-                            DisplayOrder = 0,
                             ISBN = "9781492057611",
                             ImageUrl = "",
                             ListPrice = 49.990000000000002,
@@ -639,7 +606,6 @@ namespace Bulky.DataAccess.Data.Migrations
                             Author = "Nigel Poulton",
                             CategoryId = 2,
                             Description = "Comprehensive Docker reference.",
-                            DisplayOrder = 0,
                             ISBN = "9781521822807",
                             ImageUrl = "",
                             ListPrice = 54.990000000000002,
@@ -654,7 +620,6 @@ namespace Bulky.DataAccess.Data.Migrations
                             Author = "Chris Richardson",
                             CategoryId = 2,
                             Description = "With examples in Java and Spring.",
-                            DisplayOrder = 0,
                             ISBN = "9781617294549",
                             ImageUrl = "",
                             ListPrice = 64.989999999999995,
@@ -669,7 +634,6 @@ namespace Bulky.DataAccess.Data.Migrations
                             Author = "Eric Freeman",
                             CategoryId = 2,
                             Description = "A brain-friendly guide to design patterns.",
-                            DisplayOrder = 0,
                             ISBN = "9781492078005",
                             ImageUrl = "",
                             ListPrice = 59.990000000000002,
@@ -684,7 +648,6 @@ namespace Bulky.DataAccess.Data.Migrations
                             Author = "Brendan Burns",
                             CategoryId = 2,
                             Description = "Dive into Kubernetes cluster management.",
-                            DisplayOrder = 0,
                             ISBN = "9781492046530",
                             ImageUrl = "",
                             ListPrice = 64.989999999999995,
@@ -699,7 +662,6 @@ namespace Bulky.DataAccess.Data.Migrations
                             Author = "Eric Matthes",
                             CategoryId = 2,
                             Description = "A hands-on introduction to programming.",
-                            DisplayOrder = 0,
                             ISBN = "9781593279288",
                             ImageUrl = "",
                             ListPrice = 44.990000000000002,
@@ -714,7 +676,6 @@ namespace Bulky.DataAccess.Data.Migrations
                             Author = "Luciano Ramalho",
                             CategoryId = 2,
                             Description = "Clear, concise, and effective programming in Python.",
-                            DisplayOrder = 0,
                             ISBN = "9781492056355",
                             ImageUrl = "",
                             ListPrice = 64.989999999999995,
@@ -729,7 +690,6 @@ namespace Bulky.DataAccess.Data.Migrations
                             Author = "Martin Fowler",
                             CategoryId = 2,
                             Description = "Improving the design of existing code.",
-                            DisplayOrder = 0,
                             ISBN = "9780134757599",
                             ImageUrl = "",
                             ListPrice = 69.989999999999995,
@@ -744,7 +704,6 @@ namespace Bulky.DataAccess.Data.Migrations
                             Author = "Eric Evans",
                             CategoryId = 2,
                             Description = "Tackling complexity in the heart of software.",
-                            DisplayOrder = 0,
                             ISBN = "9780321125217",
                             ImageUrl = "",
                             ListPrice = 74.989999999999995,
@@ -759,7 +718,6 @@ namespace Bulky.DataAccess.Data.Migrations
                             Author = "Mike Cohn",
                             CategoryId = 2,
                             Description = "Mastering Agile project estimation.",
-                            DisplayOrder = 0,
                             ISBN = "9780131479418",
                             ImageUrl = "",
                             ListPrice = 49.990000000000002,
@@ -774,7 +732,6 @@ namespace Bulky.DataAccess.Data.Migrations
                             Author = "Jez Humble",
                             CategoryId = 2,
                             Description = "Reliable software releases through automation.",
-                            DisplayOrder = 0,
                             ISBN = "9780321601919",
                             ImageUrl = "",
                             ListPrice = 64.989999999999995,
@@ -789,7 +746,6 @@ namespace Bulky.DataAccess.Data.Migrations
                             Author = "Betsy Beyer",
                             CategoryId = 2,
                             Description = "How Google runs production systems.",
-                            DisplayOrder = 0,
                             ISBN = "9781491929124",
                             ImageUrl = "",
                             ListPrice = 74.989999999999995,
@@ -1042,7 +998,7 @@ namespace Bulky.DataAccess.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("CompanyId")
+                    b.Property<int>("CompanyId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -1181,7 +1137,9 @@ namespace Bulky.DataAccess.Data.Migrations
                 {
                     b.HasOne("Bulky.Models.Models.Company", "Company")
                         .WithMany()
-                        .HasForeignKey("CompanyId");
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Company");
                 });

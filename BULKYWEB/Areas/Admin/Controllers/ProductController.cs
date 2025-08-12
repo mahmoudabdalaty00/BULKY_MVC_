@@ -5,6 +5,7 @@ using Bulky.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Security.Claims;
 
 namespace BULKYWEB.Areas.Admin.Controllers
 {
@@ -33,6 +34,8 @@ namespace BULKYWEB.Areas.Admin.Controllers
         #region   Create||Update Product
         public IActionResult UpSert(int? id)
         {
+
+
             IEnumerable<SelectListItem> category = _unitOfWork.Category.GetAll().Select(a => new SelectListItem
             {
                 Text = a.Name,
@@ -65,6 +68,12 @@ namespace BULKYWEB.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Upsert(ProductVM pro, IFormFile? file)
         {
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var ApplicationUser = _unitOfWork.ApplicationUser
+                               .Get(a => a.Id == userId);
+
+
             try
             {
                 if (file != null)
@@ -75,9 +84,20 @@ namespace BULKYWEB.Areas.Admin.Controllers
                 }
 
                 if (pro.product.Id == 0)
+                {
+                    pro.product.CreatedBy = ApplicationUser.Name;
+                    pro.product.UpdatedBy = ApplicationUser.Name;
+                    pro.product.CreatedAt = DateTime.UtcNow;
+                    pro.product.UpdatedAt = DateTime.UtcNow;
                     _unitOfWork.Product.Add(pro.product);
+                }
                 else
+                {
+                    pro.product.UpdatedBy = ApplicationUser.Name;
+                    pro.product.UpdatedAt = DateTime.UtcNow;
+
                     _unitOfWork.Product.Update(pro.product);
+                }
 
                 _unitOfWork.Save();
                 TempData["success"] = "Product saved successfully";
@@ -200,7 +220,7 @@ namespace BULKYWEB.Areas.Admin.Controllers
         }
 
         #endregion
-           
+
         #region Api Calls
         [HttpGet]
         public IActionResult GetAll()
@@ -220,7 +240,7 @@ namespace BULKYWEB.Areas.Admin.Controllers
         {
             var prod = _unitOfWork.Product
                     .Get(p => p.Id == id);
-             if(prod == null)
+            if (prod == null)
             {
                 return Json(new
                 {

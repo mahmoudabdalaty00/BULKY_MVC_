@@ -24,15 +24,22 @@ namespace BULKYWEB.Areas.Customer.Controllers
         public IActionResult Index()
         {
             var prodList = _unitOfWork.Product
-                     .GetAll(includeProperties:"Category");
-            return View(prodList);
+                     .GetAll(includeProperties: "Category");
+
+            IEnumerable<Product> ShownList;
+
+            var shownList = prodList
+                  //.Where(p => p.Category != null && !p.Category.IsHidden)
+                  .ToList();
+
+            return View(shownList);
         }
 
 
         public IActionResult Details(int id)
         {
 
-            var prod= _unitOfWork.Product
+            var prod = _unitOfWork.Product
                      .Get(u => u.Id == id, "Category");
 
             ShoppingCart cart = new()
@@ -53,7 +60,7 @@ namespace BULKYWEB.Areas.Customer.Controllers
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-           // shoppingCart.Id = 0; // Ensure Id is not set
+            // shoppingCart.Id = 0; // Ensure Id is not set
             shoppingCart.ApplicationUserId = userId;
 
             // Validate input
@@ -81,7 +88,7 @@ namespace BULKYWEB.Areas.Customer.Controllers
             {
                 TempData["success"] = "Cart Updated Successfully";
                 _unitOfWork.Save();
-               
+
             }
             catch (DbUpdateException ex)
             {

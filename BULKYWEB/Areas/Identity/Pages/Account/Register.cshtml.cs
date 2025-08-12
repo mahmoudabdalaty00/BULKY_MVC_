@@ -118,7 +118,7 @@ namespace BULKYWEB.Areas.Identity.Pages.Account
             public string? PhoneNumber { get; set; }
 
 
-            public int CompanyId { get; set; }
+            public int? CompanyId { get; set; }
             [ValidateNever]
             public IEnumerable<SelectListItem> CompanyList { get; set; }
         }
@@ -188,9 +188,12 @@ namespace BULKYWEB.Areas.Identity.Pages.Account
                 {
                  user.CompanyId = Input.CompanyId;
                 }
+                else
+                {
+                    user.CompanyId = null;
+                }
 
-
-                var result = await _userManager.CreateAsync(user, Input.Password);
+                    var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)
                 {

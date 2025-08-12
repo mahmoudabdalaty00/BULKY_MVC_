@@ -22,7 +22,7 @@ namespace Bulky.Models.Models
         public string PostalCode { get; set; }
 
 
-        public int CompanyId { get; set; }
+        public int? CompanyId { get; set; }
         [ForeignKey(nameof(CompanyId))]
         [ValidateNever]
         public Company Company { get; set; }

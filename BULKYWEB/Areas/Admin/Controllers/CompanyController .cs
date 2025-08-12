@@ -1,10 +1,8 @@
 ﻿using Blky.Utility;
 using Bulky.DataAccess.Repository.IRepository;
 using Bulky.Models.Models;
-using Bulky.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace BULKYWEB.Areas.Admin.Controllers
 {
@@ -30,7 +28,7 @@ namespace BULKYWEB.Areas.Admin.Controllers
         #region   Create||Update Company
         public IActionResult UpSert(int? id)
         {
-            
+
 
             if (id == null || id == 0)
             {      //create
@@ -54,7 +52,7 @@ namespace BULKYWEB.Areas.Admin.Controllers
         {
             try
             {
-                
+
                 if (pro.Id == 0)
                     _unitOfWork.Company.Add(pro);
                 else
@@ -69,57 +67,57 @@ namespace BULKYWEB.Areas.Admin.Controllers
                 ModelState.AddModelError("", $"Error: {ex.Message}");
             }
 
-           
+
             return View(pro);
         }
         #endregion
-         
+
         #region Delete Company
-        public IActionResult Delete(int? id)
-        {
-            if (id == 0 || id == null)
-            {
-                return NotFound();
-            }
-            var Company =
-                    _unitOfWork.Company.Get(u => u.Id == id);
+        //public IActionResult Delete(int? id)
+        //{
+        //    if (id == 0 || id == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    var Company =
+        //            _unitOfWork.Company.Get(u => u.Id == id);
 
 
 
-            if (Company == null)
-            {
-                throw new Exception($"Cannot Find Category With this Id :{id}");
-            }
-            return View(Company);
-        }
+        //    if (Company == null)
+        //    {
+        //        throw new Exception($"Cannot Find Category With this Id :{id}");
+        //    }
+        //    return View(Company);
+        //}
 
 
-        [HttpPost]
-        public IActionResult Delete(Company pro)
-        {
-            try
-            {
-                var prod = _unitOfWork.Company
-                        .Get(p => p.Id == pro.Id);
+        //[HttpPost]
+        //public IActionResult Delete(Company pro)
+        //{
+        //    try
+        //    {
+        //        var prod = _unitOfWork.Company
+        //                .Get(p => p.Id == pro.Id);
 
-                if (prod == null)
-                {
-                    return NotFound();
-                }
-                 
-                _unitOfWork.Company.Remove(prod);
-                _unitOfWork.Save();
-                TempData["delete"] = "Category Deleted Successfully";
-                return RedirectToAction("Index");
+        //        if (prod == null)
+        //        {
+        //            return NotFound();
+        //        }
+
+        //        _unitOfWork.Company.Remove(prod);
+        //        _unitOfWork.Save();
+        //        TempData["delete"] = "Category Deleted Successfully";
+        //        return RedirectToAction("Index");
 
 
-            }
-            catch (Exception ex)
-            {
-                ModelState.AddModelError("", $"An error occurred while deleting the category: {ex.Message}");
-                return View(pro);
-            }
-        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        ModelState.AddModelError("", $"An error occurred while deleting the category: {ex.Message}");
+        //        return View(pro);
+        //    }
+        //}
 
         #endregion
 
@@ -128,17 +126,13 @@ namespace BULKYWEB.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            var products = _unitOfWork.Company.GetAll()             
-              .ToList();
+            var companies = _unitOfWork.Company.GetAll().ToList();
 
-            return Json(new
-            {
-                data = products
-            });
+            return Json(new { data = companies });
         }
 
         [HttpDelete]
-        public IActionResult Deletes(int? id)
+        public IActionResult Delete(int? id)
         {
             var company = _unitOfWork.Company
                     .Get(p => p.Id == id);
@@ -151,7 +145,7 @@ namespace BULKYWEB.Areas.Admin.Controllers
                 });
             }
 
-         
+
             _unitOfWork.Company.Remove(company);
             _unitOfWork.Save();
 
