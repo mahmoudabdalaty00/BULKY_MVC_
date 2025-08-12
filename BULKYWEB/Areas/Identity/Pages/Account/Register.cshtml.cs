@@ -3,6 +3,7 @@
 #nullable disable
 
 using Blky.Utility;
+using Bulky.DataAccess.Repository.IRepository;
 using Bulky.Models.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
@@ -27,6 +28,7 @@ namespace BULKYWEB.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<IdentityUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly IUnitOfWork _unitOfWork;
 
         public RegisterModel(
             UserManager<IdentityUser> userManager,
@@ -34,8 +36,11 @@ namespace BULKYWEB.Areas.Identity.Pages.Account
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
             RoleManager<IdentityRole> roleManager,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            IUnitOfWork unitOfWork
+            )
         {
+            _unitOfWork = unitOfWork;
             _userManager = userManager;
             _userStore = userStore;
             _emailStore = GetEmailStore();
@@ -43,6 +48,7 @@ namespace BULKYWEB.Areas.Identity.Pages.Account
             _logger = logger;
             _emailSender = emailSender;
             _roleManager = roleManager;
+
         }
 
         /// <summary>
@@ -104,16 +110,17 @@ namespace BULKYWEB.Areas.Identity.Pages.Account
             public IEnumerable<SelectListItem> RoleList { get; set; }
 
             [Required]
-            public string? Name {  get; set; }
-            public string? StreetAddress {  get; set; }
-            public string? City {  get; set; }
-            public string? State {  get; set; }
-            public string? PostalCode {  get; set; }
-            public string? PhoneNumber {  get; set; }
+            public string? Name { get; set; }
+            public string? StreetAddress { get; set; }
+            public string? City { get; set; }
+            public string? State { get; set; }
+            public string? PostalCode { get; set; }
+            public string? PhoneNumber { get; set; }
 
 
-
-
+            public int CompanyId { get; set; }
+            [ValidateNever]
+            public IEnumerable<SelectListItem> CompanyList { get; set; }
         }
 
 
@@ -143,8 +150,15 @@ namespace BULKYWEB.Areas.Identity.Pages.Account
                  {
                      Text = i,
                      Value = i
+                 }),
+                CompanyList = _unitOfWork.Company.GetAll()
+                 .Select(i => new SelectListItem
+                 {
+                     Text = i.Name,
+                     Value = i.Id.ToString(),
                  })
             };
+
 
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
@@ -160,14 +174,20 @@ namespace BULKYWEB.Areas.Identity.Pages.Account
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
-                
-                
-                 user.Name = Input.Name;
-                 user.City = Input.City;
-                 user.State = Input.State;
-                 user.StreetAddress = Input.StreetAddress;
-                 user.PostalCode = Input.PostalCode;
-                 user.PhoneNumber = Input.PhoneNumber;
+
+
+                user.Name = Input.Name;
+                user.City = Input.City;
+                user.State = Input.State;
+                user.StreetAddress = Input.StreetAddress;
+                user.PostalCode = Input.PostalCode;
+                user.PhoneNumber = Input.PhoneNumber;
+
+
+                if(Input.Role == SD.Role_Company)
+                {
+                 user.CompanyId = Input.CompanyId;
+                }
 
 
                 var result = await _userManager.CreateAsync(user, Input.Password);
@@ -176,13 +196,13 @@ namespace BULKYWEB.Areas.Identity.Pages.Account
                 {
                     _logger.LogInformation("User created a new account with password.");
 
-                    if(!String.IsNullOrEmpty(Input.Role))
+                    if (!String.IsNullOrEmpty(Input.Role))
                     {
-                       await _userManager.AddToRoleAsync(user, Input.Role);
+                        await _userManager.AddToRoleAsync(user, Input.Role);
                     }
                     else
                     {
-                        await _userManager.AddToRoleAsync(user,SD.Role_Customer);
+                        await _userManager.AddToRoleAsync(user, SD.Role_Customer);
                     }
 
                     var userId = await _userManager.GetUserIdAsync(user);
