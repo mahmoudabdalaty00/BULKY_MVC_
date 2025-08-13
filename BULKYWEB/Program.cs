@@ -56,6 +56,12 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
 
 
+//STRIPE_SECRET_KEY
+var stripeSecretKey = Environment.GetEnvironmentVariable("STRIPE_SECRET_KEY");
+builder.Services.AddSingleton<IStripeClient>(new StripeClient(stripeSecretKey));
+
+StripeConfiguration.ApiKey = builder
+       .Configuration.GetSection("Stripe:SecretKey").Get<string>();
 
 
 
@@ -75,12 +81,6 @@ app.UseStaticFiles();
 
 
  
-//STRIPE_SECRET_KEY
-var stripeSecretKey = Environment.GetEnvironmentVariable("STRIPE_SECRET_KEY");
-builder.Services.AddSingleton<IStripeClient>(new StripeClient(stripeSecretKey));
-
-StripeConfiguration.ApiKey = builder
-       .Configuration.GetSection("Stripe:SecretKey").Get<string>();
 
 
 
