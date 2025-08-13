@@ -33,6 +33,7 @@ namespace Bulky.Models.Models
 
 
         public string? PaymentIntentId { get; set; }
+        public string? SessionId { get; set; }
 
 
         [Required]

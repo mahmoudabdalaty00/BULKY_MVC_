@@ -27,9 +27,9 @@ namespace Bulky.DataAccess.Repository.Repositories
         {
             IQueryable<T> queries = dbSet;
 
-            if (expression != null) 
+            if (expression != null)
             {
-                var query = queries.Where(expression);
+                queries = queries.Where(expression);  
             }
 
             if (!string.IsNullOrEmpty(includeProperties))
@@ -40,8 +40,10 @@ namespace Bulky.DataAccess.Repository.Repositories
                     queries = queries.Include(includeProp);
                 }
             }
+
             return queries.ToList();
         }
+
 
         public T Get(Expression<Func<T, bool>> expression, string? includeProperties = null, bool tracked = false)
         {
