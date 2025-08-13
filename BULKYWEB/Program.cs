@@ -73,6 +73,12 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 
+
+ 
+//STRIPE_SECRET_KEY
+var stripeSecretKey = Environment.GetEnvironmentVariable("STRIPE_SECRET_KEY");
+builder.Services.AddSingleton<IStripeClient>(new StripeClient(stripeSecretKey));
+
 StripeConfiguration.ApiKey = builder
        .Configuration.GetSection("Stripe:SecretKey").Get<string>();
 
