@@ -5,6 +5,7 @@ using Bulky.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Stripe;
+using Stripe.Checkout;
 using System.Security.Claims;
 
 namespace BULKYWEB.Areas.Admin.Controllers
@@ -40,7 +41,7 @@ namespace BULKYWEB.Areas.Admin.Controllers
         }
 
 
-
+        #region Shipping Status 
         [HttpPost]
         [Authorize(Roles = SD.Role_Admin + "," + SD.Role_Employee)]
         public IActionResult UpdateOrderDetails()
@@ -112,8 +113,6 @@ namespace BULKYWEB.Areas.Admin.Controllers
             return RedirectToAction(nameof(Details), new { orderId = OrderVM.orderHeader.Id });
         }
 
-
-
         [HttpPost]
         [Authorize(Roles = SD.Role_Admin + "," + SD.Role_Employee)]
         public IActionResult Cancelled()
@@ -124,8 +123,8 @@ namespace BULKYWEB.Areas.Admin.Controllers
             {
                 var options = new RefundCreateOptions
                 {
-                   Reason = RefundReasons.RequestedByCustomer,
-                   PaymentIntent = orderHeader.PaymentIntentId,
+                    Reason = RefundReasons.RequestedByCustomer,
+                    PaymentIntent = orderHeader.PaymentIntentId,
                 };
 
                 var service = new RefundService();
@@ -144,6 +143,147 @@ namespace BULKYWEB.Areas.Admin.Controllers
             return RedirectToAction(nameof(Details), new { orderId = OrderVM.orderHeader.Id });
 
         }
+        #endregion
+
+
+
+        [HttpPost]
+        [ActionName("Details")]
+        public IActionResult Pay_Now()
+        {
+
+
+            OrderVM.orderHeader = _unitOfWork.OrderHeader
+                 .Get(o => o.Id == OrderVM.orderHeader.Id,
+                     includeProperties: "ApplicationUser");
+
+            OrderVM.orderDetail = _unitOfWork.OrderDetail
+                .GetAll(o => o.orderHeaderId == OrderVM.orderHeader.Id,
+                    includeProperties: "ApplicationUser");
+
+
+            var domain = "https://localhost:7036/";
+            var options = new SessionCreateOptions
+            {
+                SuccessUrl = domain + $"Admin/Order/PaymentConfirmation?orderHeaderId={OrderVM.orderHeader.Id}",
+                CancelUrl = domain + $"Admin/Order/Details?orderId={OrderVM.orderHeader.Id}",
+                LineItems = new List<SessionLineItemOptions>(),
+                Mode = "payment",
+            };
+
+            foreach (var item in OrderVM.orderDetail)
+            {
+                var sessionLineItem = new SessionLineItemOptions
+                {
+                    PriceData = new SessionLineItemPriceDataOptions
+                    {
+                        UnitAmount = (long)(item.Price * 100), // $20.50 => 2050
+                        Currency = "usd",
+                        ProductData = new SessionLineItemPriceDataProductDataOptions
+                        {
+                            Name = item.Product.Name
+                        }
+                    },
+                    Quantity = item.count
+                };
+                options.LineItems.Add(sessionLineItem);
+            }
+
+
+            var service = new SessionService();
+            Session session = service.Create(options);
+            _unitOfWork.OrderHeader.UpdateStripePayment(OrderVM.orderHeader.Id, session.Id, session.PaymentIntentId);
+            _unitOfWork.Save();
+            Response.Headers.Add("Location", session.Url);
+            return new StatusCodeResult(303);
+        }
+
+
+
+
+
+
+
+
+
+        public IActionResult PaymentConfirmation(int orderHeaderId)
+        {
+            OrderHeader orderHeader = _unitOfWork.OrderHeader.Get(o => o.Id == orderHeaderId);
+            if (orderHeader == null)
+            {
+                Console.WriteLine($"OrderConfirmation - OrderHeader with ID {orderHeaderId} not found.");
+                return NotFound();
+            }
+
+            if (orderHeader.PaymentStatus == SD.PaymentStatusApprovedForDeployPayments)
+            {
+
+                //orderHeader by company 
+                var service = new SessionService();
+               
+
+                var sessionOptions = new SessionGetOptions
+                {
+                    Expand = new List<string> { "payment_intent" }
+                };
+                Session session = service.Get(orderHeader.SessionId, sessionOptions);
+                if (session == null)
+                {
+                    Console.WriteLine($"OrderConfirmation - Session with ID {orderHeader.SessionId} not found.");
+                    return BadRequest();
+                }
+
+                Console.WriteLine($"OrderConfirmation - Session ID: {session.Id}, PaymentIntentId: {session.PaymentIntentId}, PaymentStatus: {session.PaymentStatus}");
+
+                if (session.PaymentStatus.ToLower() == "paid")
+                {
+                    string paymentIntentId = session.PaymentIntentId;
+                    if (string.IsNullOrEmpty(paymentIntentId))
+                    {
+
+                        var paymentIntentService = new PaymentIntentService();
+                        var paymentIntentOptions = new PaymentIntentListOptions
+                        {
+                            Customer = session.CustomerId,
+                            Limit = 1
+
+                        };
+                        var paymentIntent = paymentIntentService.List(paymentIntentOptions).FirstOrDefault();
+                        if (paymentIntent != null)
+                        {
+                            paymentIntentId = paymentIntent.Id;
+                        }
+                        else
+                        {
+                            Console.WriteLine($"OrderConfirmation - No PaymentIntent found for Session ID {session.Id}.");
+                        }
+                    }
+
+                    if (!string.IsNullOrEmpty(paymentIntentId))
+                    {
+                        _unitOfWork.OrderHeader.UpdateStripePayment(orderHeaderId, session.Id, paymentIntentId);
+                        _unitOfWork.OrderHeader.UpdateStatus(orderHeaderId, orderHeader.OrderStatus, SD.PaymentStatusApproved);
+                        _unitOfWork.Save();
+                    }
+
+                    else
+                    {
+                        Console.WriteLine($"OrderConfirmation - PaymentIntentId is still null for Session ID {session.Id}.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"OrderConfirmation - PaymentStatus is {session.PaymentStatus}, not 'paid'.");
+                }
+            }
+            
+
+            return View(orderHeaderId);
+        }
+
+
+
+
 
 
 
