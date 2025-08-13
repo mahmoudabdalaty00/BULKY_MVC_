@@ -1,6 +1,7 @@
 
 using Blky.Utility;
 using Bulky.DataAccess.Data;
+using Bulky.DataAccess.DbInitializer;
 using Bulky.DataAccess.Repository.IRepository;
 using Bulky.DataAccess.Repository.Repositories;
 using Microsoft.AspNetCore.Identity;
@@ -70,7 +71,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
-
+builder.Services.AddScoped<IDbInitializer, DbInitializer>();
 
 //STRIPE_SECRET_KEY
 var stripeSecretKey = Environment.GetEnvironmentVariable("STRIPE_SECRET_KEY");
@@ -105,6 +106,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.UseSession();
 app.MapStaticAssets();
+SeedDatabase();
 app.MapRazorPages();
 app.MapControllerRoute(
     name: "default",
@@ -113,3 +115,12 @@ app.MapControllerRoute(
 
 
 app.Run();
+
+void SeedDatabase()
+{
+   using (var scope = app.Services.CreateScope())
+    {
+     var initi =    scope.ServiceProvider.GetRequiredService<IDbInitializer>();
+        initi.Initialize();
+    }
+}
