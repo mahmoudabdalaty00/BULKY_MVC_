@@ -274,6 +274,7 @@ namespace BULKYWEB.Areas.Customer.Controllers
                         _unitOfWork.OrderHeader.UpdateStatus(id, SD.StatusApproved, SD.PaymentStatusApproved);
                         _unitOfWork.Save();
                     }
+
                     else
                     {
                         Console.WriteLine($"OrderConfirmation - PaymentIntentId is still null for Session ID {session.Id}.");
