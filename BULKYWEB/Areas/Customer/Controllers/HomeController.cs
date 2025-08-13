@@ -1,3 +1,4 @@
+using Blky.Utility;
 using Bulky.DataAccess.Repository.IRepository;
 using Bulky.Models.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -23,6 +24,7 @@ namespace BULKYWEB.Areas.Customer.Controllers
 
         public IActionResult Index()
         {
+            
             var prodList = _unitOfWork.Product
                      .GetAll(includeProperties: "Category");
 
@@ -77,28 +79,45 @@ namespace BULKYWEB.Areas.Customer.Controllers
             if (existingCart != null)
             {
                 existingCart.Count += shoppingCart.Count;
+                try
+                {
+                    TempData["success"] = "Cart Updated Successfully";
+                    _unitOfWork.Save();
+
+                }
+                catch (DbUpdateException ex)
+                {
+                    _logger.LogError(ex, "Error saving shopping cart: {InnerException}", ex.InnerException?.Message);
+                    ModelState.AddModelError("", "An error occurred while saving the cart.");
+                    var prod = _unitOfWork.Product.Get(u => u.Id == shoppingCart.ProductId, "Category");
+                    shoppingCart.Product = prod;
+                    return View(shoppingCart);
+                }
                 _unitOfWork.ShoppingCart.Update(existingCart);
             }
             else
             {
                 _unitOfWork.ShoppingCart.Add(shoppingCart);
+                try
+                {
+                    TempData["success"] = "Cart Updated Successfully";
+                    _unitOfWork.Save();
+
+                }
+                catch (DbUpdateException ex)
+                {
+                    _logger.LogError(ex, "Error saving shopping cart: {InnerException}", ex.InnerException?.Message);
+                    ModelState.AddModelError("", "An error occurred while saving the cart.");
+                    var prod = _unitOfWork.Product.Get(u => u.Id == shoppingCart.ProductId, "Category");
+                    shoppingCart.Product = prod;
+                    return View(shoppingCart);
+                }
+
             }
 
-            try
-            {
-                TempData["success"] = "Cart Updated Successfully";
-                _unitOfWork.Save();
 
-            }
-            catch (DbUpdateException ex)
-            {
-                _logger.LogError(ex, "Error saving shopping cart: {InnerException}", ex.InnerException?.Message);
-                ModelState.AddModelError("", "An error occurred while saving the cart.");
-                var prod = _unitOfWork.Product.Get(u => u.Id == shoppingCart.ProductId, "Category");
-                shoppingCart.Product = prod;
-                return View(shoppingCart);
-            }
-
+            HttpContext.Session.SetInt32(SD.SessionCart,
+            _unitOfWork.ShoppingCart.GetAll(c => c.ApplicationUserId == userId).Count());
             return RedirectToAction("Index");
         }
 

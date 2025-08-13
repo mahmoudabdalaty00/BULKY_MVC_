@@ -29,5 +29,8 @@ namespace Blky.Utility
 
 
 
+        public const string SessionCart = "SessionShoppingCart";
+
+
     }
 }

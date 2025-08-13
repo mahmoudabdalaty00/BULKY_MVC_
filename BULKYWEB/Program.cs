@@ -1,11 +1,11 @@
 
+using Blky.Utility;
 using Bulky.DataAccess.Data;
 using Bulky.DataAccess.Repository.IRepository;
 using Bulky.DataAccess.Repository.Repositories;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
-using Blky.Utility;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.EntityFrameworkCore;
 using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -31,7 +31,7 @@ builder.Services.Configure<StripeSettings>(
 
 
 
-builder.Services.AddIdentity<IdentityUser,IdentityRole>(
+builder.Services.AddIdentity<IdentityUser, IdentityRole>(
     options => options.SignIn.RequireConfirmedAccount = true)
         .AddEntityFrameworkStores<ApplicationDbContext>()
         .AddDefaultTokenProviders();
@@ -47,9 +47,20 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 
 
+
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(opt =>{
+   opt.IdleTimeout = TimeSpan.FromMinutes(10);
+    opt.Cookie.HttpOnly = true;
+    opt.Cookie.IsEssential = true;
+});
+    
+
+
+
 builder.Services.AddRazorPages();
 
-      
+
 
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -80,14 +91,14 @@ app.UseStaticFiles();
 
 
 
- 
+
 
 
 
 app.UseRouting();
-app.UseAuthentication();    
+app.UseAuthentication();
 app.UseAuthorization();
-
+app.UseSession();
 app.MapStaticAssets();
 app.MapRazorPages();
 app.MapControllerRoute(

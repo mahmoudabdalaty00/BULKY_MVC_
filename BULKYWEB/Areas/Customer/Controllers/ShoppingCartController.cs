@@ -314,13 +314,18 @@ namespace BULKYWEB.Areas.Customer.Controllers
 
         public IActionResult Minus(int id)
         {
+             
+
             var cartDb = _unitOfWork.ShoppingCart
-                     .Get(c => c.Id == id);
+                     .Get(c => c.Id == id, tracked: true);
 
             if (cartDb.Count == 1)
             {
                 _unitOfWork.ShoppingCart.Remove(cartDb);
                 _unitOfWork.Save();
+
+                HttpContext.Session.SetInt32(SD.SessionCart,
+                    _unitOfWork.ShoppingCart.GetAll(c => c.ApplicationUserId == cartDb.ApplicationUserId).Count());
                 return RedirectToAction("Index");
             }
             else
@@ -329,6 +334,11 @@ namespace BULKYWEB.Areas.Customer.Controllers
 
                 _unitOfWork.ShoppingCart.Update(cartDb);
                 _unitOfWork.Save();
+
+
+                HttpContext.Session.SetInt32(SD.SessionCart,
+                      _unitOfWork.ShoppingCart.GetAll(c => c.ApplicationUserId == cartDb.ApplicationUserId).Count());
+
                 return RedirectToAction("Index");
             }
 
@@ -339,9 +349,13 @@ namespace BULKYWEB.Areas.Customer.Controllers
         public IActionResult Remove(int id)
         {
             var cartDb = _unitOfWork.ShoppingCart
-                     .Get(c => c.Id == id);
+                     .Get(c => c.Id == id ,tracked:true);
 
             _unitOfWork.ShoppingCart.Remove(cartDb);
+            HttpContext.Session.SetInt32(SD.SessionCart,
+                    _unitOfWork.ShoppingCart.GetAll(c => c.ApplicationUserId == cartDb.ApplicationUserId).Count());
+
+
             _unitOfWork.Save();
             return RedirectToAction("Index");
 
