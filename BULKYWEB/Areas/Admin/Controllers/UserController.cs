@@ -23,6 +23,7 @@ namespace BULKYWEB.Areas.Admin.Controllers
             _userManager = userManager;
         }
 
+
         public IActionResult Index()
         {
             var appUser = _context.ApplicationUsers
@@ -31,8 +32,6 @@ namespace BULKYWEB.Areas.Admin.Controllers
 
             return View(appUser);
         }
-
-
 
 
         public IActionResult RoleManagement(string userId)
@@ -98,13 +97,6 @@ namespace BULKYWEB.Areas.Admin.Controllers
             return RedirectToAction("Index");
 
         }
-
-
-
-
-
-
-
 
         #region Api Calls
         [HttpGet]

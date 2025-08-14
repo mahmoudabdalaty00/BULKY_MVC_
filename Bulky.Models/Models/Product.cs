@@ -41,15 +41,14 @@ namespace Bulky.Models.Models
         [ForeignKey(nameof(CategoryId))]
         [ValidateNever]
         public Category Category { get; set; }
+         
+  
+        [NotMapped]
+        public bool IsHidden { get; set; } = false;
+
 
         [ValidateNever]
-        public string ImageUrl { get; set; }
-
-
-
-
-        [NotMapped]
-        public bool IsHidden { get; set; } = false; 
+        public List<ProductImage> ProductImages { get; set; }
 
     }
 }

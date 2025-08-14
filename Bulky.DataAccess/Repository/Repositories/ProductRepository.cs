@@ -35,10 +35,12 @@ namespace Bulky.DataAccess.Repository.Repositories
                 pro.price100 = product.price100;
                 pro.CategoryId = product.CategoryId;
                 pro.UpdatedAt = DateTime.UtcNow;
-                if (product.ImageUrl != null)
-                {
-                    pro.ImageUrl = product.ImageUrl;
-                }
+                pro.ProductImages = product.ProductImages;
+                pro.DisplayOrder = product.DisplayOrder;
+                //if (product.ImageUrl != null)
+                //{
+                //    pro.ImageUrl = product.ImageUrl;
+                //}
                 _context.Products.Update(pro);
                 _context.SaveChanges();
             }
