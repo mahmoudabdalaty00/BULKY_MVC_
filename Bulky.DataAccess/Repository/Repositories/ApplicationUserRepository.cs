@@ -11,6 +11,11 @@ namespace Bulky.DataAccess.Repository.Repositories
         {
           _context = context;
         }
+
+        public void Update(ApplicationUser applicationUser)
+        {
+            throw new NotImplementedException();
+        }
     }
 
 

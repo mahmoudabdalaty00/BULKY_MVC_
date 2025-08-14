@@ -26,7 +26,7 @@ namespace BULKYWEB.Areas.Customer.Controllers
         {
             
             var prodList = _unitOfWork.Product
-                     .GetAll(includeProperties: "Category");
+                     .GetAll(includeProperties: "Category,ProductImages");
 
             IEnumerable<Product> ShownList;
 
@@ -42,7 +42,7 @@ namespace BULKYWEB.Areas.Customer.Controllers
         {
 
             var prod = _unitOfWork.Product
-                     .Get(u => u.Id == id, "Category");
+                     .Get(u => u.Id == id, "Category,ProductImages");
 
             ShoppingCart cart = new()
             {

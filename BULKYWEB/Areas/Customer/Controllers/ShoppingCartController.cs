@@ -39,9 +39,10 @@ namespace BULKYWEB.Areas.Customer.Controllers
                 orderHeader = new OrderHeader()
             };
 
-
+            IEnumerable<ProductImage> productImages = _unitOfWork.ProductImage.GetAll();
             foreach (var cart in ShoppingCartVM.shoppingCartsList)
             {
+                cart.Product.ProductImages = productImages.Where(u => u.ProductId == cart.Product.Id).ToList();
                 cart.Price = GetPriceBasedInQuentity(cart);
                 ShoppingCartVM.orderHeader.OrderTotal += (cart.Price * cart.Count);
             }
@@ -52,6 +53,10 @@ namespace BULKYWEB.Areas.Customer.Controllers
         }
 
 
+
+        #endregion
+
+        #region Summery
         public IActionResult Summery()
         {
             var claimsIdentity = (ClaimsIdentity)User.Identity;
@@ -87,10 +92,6 @@ namespace BULKYWEB.Areas.Customer.Controllers
 
             return View(ShoppingCartVM);
         }
-        #endregion
-
-
-
         [HttpPost]
         [ActionName("Summery")]
         public IActionResult SummeryPOST()
@@ -186,36 +187,7 @@ namespace BULKYWEB.Areas.Customer.Controllers
 
 
 
-
-
-        //public IActionResult OrderConfirmation(int id)
-        //{
-        //    OrderHeader orderHeader = _unitOfWork.OrderHeader.Get(o => o.Id == id);
-
-        //    if (orderHeader.PaymentStatus != SD.PaymentStatusApprovedForDeployPayments)
-        //    {
-        //        var service = new SessionService();
-        //        Session session = service.Get(orderHeader.SessionId);
-
-        //        if (session.PaymentStatus.ToLower() == "paid")
-        //        {
-        //            _unitOfWork.OrderHeader.UpdateStripePayment(id, session.Id, session.PaymentIntentId);
-        //            _unitOfWork.OrderHeader.UpdateStatus(id, SD.StatusApproved, SD.PaymentStatusApproved);
-        //            _unitOfWork.Save();
-        //        }
-
-        //    }
-
-        //    List<ShoppingCart> shoppingCarts = _unitOfWork.ShoppingCart
-        //               .GetAll(u => u.ApplicationUserId == orderHeader.ApplicationUserId).ToList();
-
-        //    _unitOfWork.ShoppingCart.RemoveRange(shoppingCarts);
-        //    _unitOfWork.Save();
-
-
-
-        //    return View(id);
-        //}
+        #endregion
 
 
         public IActionResult OrderConfirmation(int id)
@@ -249,13 +221,13 @@ namespace BULKYWEB.Areas.Customer.Controllers
                     string paymentIntentId = session.PaymentIntentId;
                     if (string.IsNullOrEmpty(paymentIntentId))
                     {
-                        
+
                         var paymentIntentService = new PaymentIntentService();
                         var paymentIntentOptions = new PaymentIntentListOptions
                         {
-                            Customer = session.CustomerId, 
+                            Customer = session.CustomerId,
                             Limit = 1
-                            
+
                         };
                         var paymentIntent = paymentIntentService.List(paymentIntentOptions).FirstOrDefault();
                         if (paymentIntent != null)
@@ -291,10 +263,10 @@ namespace BULKYWEB.Areas.Customer.Controllers
             _unitOfWork.ShoppingCart.RemoveRange(shoppingCarts);
             _unitOfWork.Save();
 
-            
+
             HttpContext.Session.Clear();
-           
-             
+
+
             return View(id);
         }
 
@@ -318,7 +290,7 @@ namespace BULKYWEB.Areas.Customer.Controllers
 
         public IActionResult Minus(int id)
         {
-             
+
 
             var cartDb = _unitOfWork.ShoppingCart
                      .Get(c => c.Id == id, tracked: true);
@@ -353,7 +325,7 @@ namespace BULKYWEB.Areas.Customer.Controllers
         public IActionResult Remove(int id)
         {
             var cartDb = _unitOfWork.ShoppingCart
-                     .Get(c => c.Id == id ,tracked:true);
+                     .Get(c => c.Id == id, tracked: true);
 
             _unitOfWork.ShoppingCart.Remove(cartDb);
             HttpContext.Session.SetInt32(SD.SessionCart,
