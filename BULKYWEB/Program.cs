@@ -107,7 +107,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.UseSession();
 app.MapStaticAssets();
-SeedDatabase();
+//SeedDatabase();
 app.UseStaticFiles();
 app.MapRazorPages();
 app.MapControllerRoute(
@@ -118,11 +118,11 @@ app.MapControllerRoute(
 
 app.Run();
 
-void SeedDatabase()
-{
-    using (var scope = app.Services.CreateScope())
-    {
-        var initi = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
-        initi.Initialize();
-    }
-}
+//void SeedDatabase()
+//{
+//    using (var scope = app.Services.CreateScope())
+//    {
+//        var initi = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
+//        initi.Initialize();
+//    }
+//}

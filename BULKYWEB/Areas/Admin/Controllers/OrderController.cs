@@ -32,16 +32,22 @@ namespace BULKYWEB.Areas.Admin.Controllers
         {
             OrderVM = new()
             {
-                orderHeader = _unitOfWork.OrderHeader.Get(o => o.Id == orderId, includeProperties: "ApplicationUser"),
-                orderDetail = _unitOfWork.OrderDetail.GetAll(o => o.orderHeaderId == orderId, includeProperties: "Product"),
+                orderHeader = _unitOfWork.OrderHeader
+                .Get(o => o.Id == orderId, includeProperties: "ApplicationUser"),
+               
+                orderDetail = _unitOfWork.OrderDetail
+                .GetAll(o => o.orderHeaderId == orderId, includeProperties: "Product"),
 
             };
 
+            
             return View(OrderVM);
         }
 
 
         #region Shipping Status 
+      
+        
         [HttpPost]
         [Authorize(Roles = SD.Role_Admin + "," + SD.Role_Employee)]
         public IActionResult UpdateOrderDetails()
@@ -82,6 +88,7 @@ namespace BULKYWEB.Areas.Admin.Controllers
 
 
 
+        #region Finish        StartProcessing &  ShipOrder &   Cancelled
         [HttpPost]
         [Authorize(Roles = SD.Role_Admin + "," + SD.Role_Employee)]
         public IActionResult StartProcessing()
@@ -117,7 +124,8 @@ namespace BULKYWEB.Areas.Admin.Controllers
         [Authorize(Roles = SD.Role_Admin + "," + SD.Role_Employee)]
         public IActionResult Cancelled()
         {
-            var orderHeader = _unitOfWork.OrderHeader.Get(u => u.Id == OrderVM.orderHeader.Id);
+            var orderHeader = _unitOfWork.OrderHeader
+                    .Get(u => u.Id == OrderVM.orderHeader.Id);
 
             if (orderHeader.PaymentStatus == SD.PaymentStatusApproved)
             {
@@ -130,12 +138,15 @@ namespace BULKYWEB.Areas.Admin.Controllers
                 var service = new RefundService();
                 Refund refund = service.Create(options);
 
+
                 _unitOfWork.OrderHeader.UpdateStatus(orderHeader.Id, SD.StatusCancelled, SD.StatusRefunded);
                 _unitOfWork.Save();
             }
             else
             {
+
                 _unitOfWork.OrderHeader.UpdateStatus(orderHeader.Id, SD.StatusCancelled, SD.StatusCancelled);
+                _unitOfWork.Save();
             }
 
 
@@ -147,6 +158,12 @@ namespace BULKYWEB.Areas.Admin.Controllers
 
 
 
+        #endregion
+
+
+
+
+        #region            PaymentConfirmation &  Pay_Now
         [HttpPost]
         [ActionName("Details")]
         public IActionResult Pay_Now()
@@ -198,13 +215,7 @@ namespace BULKYWEB.Areas.Admin.Controllers
             return new StatusCodeResult(303);
         }
 
-
-
-
-
-
-
-
+   
 
         public IActionResult PaymentConfirmation(int orderHeaderId)
         {
@@ -281,17 +292,7 @@ namespace BULKYWEB.Areas.Admin.Controllers
             return View(orderHeaderId);
         }
 
-
-
-
-
-
-
-
-
-
-
-
+        #endregion
 
         #region Api Calls
         public IActionResult GetAll(string status)

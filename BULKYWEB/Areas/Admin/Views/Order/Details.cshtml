@@ -200,7 +200,7 @@
                             </div>
                             @if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
                             {
-                            <button asp-action="UpdateOrderDetails" type="submit" class="btn btn-warning form-control my-1"  >
+                                <button id="btnUpdateOrder" asp-action="UpdateOrderDetails" type="submit" class="btn btn-warning form-control my-1">
                                     Update Order Details
                             </button>
                             }
@@ -265,14 +265,16 @@
                                 }
                                 @if (Model.orderHeader.OrderStatus == SD.StatusProcessing)
                                 {
-                                    <button type="submit" asp-action="ShipOrder" onclick="return validateInput()" class="btn btn-primary form-control my-1">Ship Order</button>
+                                    <button type="submit" asp-action="ShipOrder" onclick="return validateInput()" class="btn btn-primary form-control my-1">
+                                        Ship Order
+                                        </button>
                                 }
 
                                 if ( Model.orderHeader.OrderStatus != SD.StatusRefunded &&
                                      Model.orderHeader.OrderStatus != SD.StatusCancelled &&
                                      Model.orderHeader.OrderStatus != SD.StatusShipped )
                                  {
-                                        <button asp-action="Cancelled" type="submit" class="btn btn-danger form-control my-1">Cancel Order</button>
+                                    <button id="btnCancelOrder"  asp-action="Cancelled" type="submit" class="btn btn-danger form-control my-1">Cancel Order</button>
                                     }
 
                                 }
@@ -317,5 +319,42 @@
             }
             return true;
         }
+    </script>
+    <script>
+        // Intercept Update button
+        $('#btnUpdateOrder').click(function (e) {
+            e.preventDefault(); // prevent immediate form submission
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You want to update the order details!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, update it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $(this).closest('form').submit(); // submit the form if confirmed
+                }
+            });
+        });
+
+        // Intercept Cancel button
+        $('#btnCancelOrder').click(function (e) {
+            e.preventDefault(); // prevent immediate form submission
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You want to cancel this order!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, cancel it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $(this).closest('form').submit(); // submit the form if confirmed
+                }
+            });
+        });
     </script>
     }
