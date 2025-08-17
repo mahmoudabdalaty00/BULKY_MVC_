@@ -24,7 +24,7 @@ namespace BULKYWEB.Areas.Admin.Controllers
         public IActionResult Index()
         {
             var products = _unitOfWork.Product.GetAll(includeProperties: "Category")
-                .OrderBy(x => x.ListPrice)
+                .OrderBy(x => x.DisplayOrder)
                 .ToList();
 
 
@@ -223,7 +223,7 @@ namespace BULKYWEB.Areas.Admin.Controllers
         public IActionResult GetAll()
         {
             var products = _unitOfWork.Product.GetAll(includeProperties: "Category")
-              .OrderBy(x => x.ListPrice)
+              .OrderBy(x => x.DisplayOrder)
               .ToList();
 
             return Json(new
@@ -357,5 +357,18 @@ namespace BULKYWEB.Areas.Admin.Controllers
         }
 
         #endregion
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     }
 }

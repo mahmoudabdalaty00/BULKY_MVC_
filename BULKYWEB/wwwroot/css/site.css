@@ -10,7 +10,83 @@ for details on configuring this project to bundle and minify static web assets. 
     box-shadow: 0 -2px;
 }
 
- 
+
+
+
+/*Pagation Table Color */
+#myTable {
+    width: 100% !important;
+}
+
+.dataTables_wrapper {
+    overflow-x: auto; /* scroll horizontally if wide */
+    margin-bottom: 50px; /* space for pagination */
+}
+
+
+/* Table header */
+#myTable thead th {
+    background-color: #192E2F; /* your brand color */
+    color: #fff;
+    text-align: center;
+}
+
+/* Row hover */
+#myTable tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+/* Pagination buttons */
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+    background: #325D88;
+    color: white !important;
+    border: none;
+    border-radius: 6px;
+    margin: 2px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+        background: #D9534F !important; /* highlight current page */
+    }
+
+/* Search box */
+.dataTables_wrapper .dataTables_filter input {
+    border: 2px solid #325D88;
+    border-radius: 6px;
+    padding: 5px;
+}
+
+
+#myTable .btn:hover {
+    background-color: #0f1c1d !important; /* darker shade on hover */
+    color: #fff !important;
+}
+
+/* Style DataTables pagination buttons */
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+    background: #192E2F !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: 4px !important;
+    margin: 2px;
+    padding: 5px 10px;
+}
+
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+        background: #0f1c1d !important; /* darker hover */
+        color: #fff !important;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+        background: #D9534F !important; /* highlight current page */
+        color: #fff !important;
+    }
+
+/*end of Pagation Table*/
+
 
 
 a.navbar-brand {

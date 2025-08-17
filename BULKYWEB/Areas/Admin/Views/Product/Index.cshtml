@@ -1,12 +1,9 @@
 ﻿@model List<Product>
- 
-<div class="container">
-     
+
+<div class="container mt-3 mb-3">
     <div class="row pt-4 pb-3">
         <div class="col-6">
-            <h2 class="text-primary">
-                Product List
-            </h2>
+            <h2 class="text-primary">Product List</h2>
         </div>
         <div class="col-6 text-end">
             <a asp-controller="Product" asp-action="UpSert"
@@ -15,8 +12,8 @@
             </a>
         </div>
     </div>
-        
-    <table id="myTable" class="table table-hover pt-4">
+
+    <table id="myTable" class="table table-hover table-bordered w-100">
         <thead>
             <tr class="table-primary text-center">
                 <th scope="col">Name</th>
@@ -24,24 +21,25 @@
                 <th scope="col">Author</th>
                 <th scope="col">ISBN</th>
                 <th scope="col">Category</th>
-                <th></th>
+                <th scope="col">DisplayOrder</th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
-             
         </tbody>
     </table>
 </div>
 
-
-
- 
 @section Scripts {
+    <!-- ✅ jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 
+   
+    <!-- ✅ DataTables with Bootstrap 5 -->
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+
+    
+    <!-- ✅ Your custom JS -->
     <script src="~/js/product.js"></script>
 }
-
-

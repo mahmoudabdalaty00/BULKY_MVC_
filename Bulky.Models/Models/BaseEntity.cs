@@ -21,6 +21,7 @@ namespace Bulky.Models.Models
         public string? UpdatedBy { get; set; }
 
         [DisplayName("Display Order")]
+        [Required]
         public int DisplayOrder { get; set; }
     }
 }
