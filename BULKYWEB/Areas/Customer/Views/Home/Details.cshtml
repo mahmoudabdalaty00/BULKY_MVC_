@@ -1,6 +1,6 @@
 ﻿@model ShoppingCart
 
-<form method="post" asp-action="Details">
+<form method="post" asp-action="Details"     >
 
     <input asp-for="ProductId" hidden />
     <div class="card shadow border-0 mt-4">
@@ -14,6 +14,7 @@
                         @Model.Product.Author
                         </p>
                 </div>
+             
             </div>
         </div>
         <div class="card-body">
@@ -48,7 +49,11 @@
                                     @foreach (var imageWithIndex in Model.Product.ProductImages.Select((image, index) => new { Image = image, Index = index }))
                                     {
                                         <div class="@(imageWithIndex.Index == 0 ? "carousel-item active" : "carousel-item")">
-                                            <img src="@imageWithIndex.Image.ImageUrl" class="d-block w-100" alt="Product image">
+                                            <img src="@Url.Content("~/" + imageWithIndex.Image.ImageUrl.Replace("\\", "/"))"
+                                                 class="d-block w-100"
+                                                 alt="Product image"
+                                                 asp-append-version="true" />
+
                                         </div>
                                     }
                                 </div>
@@ -70,7 +75,6 @@
                         <div class="col-12 col-md-6 pb-4">
                             <span class="badge">
                                 @Model.Product.Category.Name
-                                
                             </span>
                         </div>
                         <div class="row ps-2">
@@ -82,7 +86,7 @@
                             <h6 class="text-dark text-opacity-50  pb-2">
                                 List Price:
                                 <span class="text-decoration-line-through">
-                                    @Model.Product.price.ToString("c")
+                                    @Model.Product.ListPrice.ToString("c")
                                 </span>
                             </h6>
                         </div>

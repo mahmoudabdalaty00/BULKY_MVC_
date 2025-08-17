@@ -1,51 +1,56 @@
 ﻿@model IEnumerable<Product>
-<div class="row pb-3 pt-5 p-5">
+
+<div class="row pb-3 pt-5 p-5 align-items-stretch">
     @foreach (var product in Model)
     {
-        <div class="col-lg-3 col-sm-6">
-            <div class="row p-2">
-                <div class="col-12 p-1">
-                    <div class="card border-0 p-3 shadow border-top border-5 rounded">
-                      
-                        @if (product.ProductImages != null && product.ProductImages.Count() > 0)
-                        {
-                            <img src="@product.ProductImages.FirstOrDefault().ImageUrl" class="card-img-top rounded" />
-                        }
-                        else
-                        {
-                            <img src="https://placehold.co/500x600/png" class="card-img-top rounded" />
-                        }
-                        <div class="card-body pb-0">
-                            <div class="pl-1">
-                                <p class="card-title h5 text-dark opacity-75 text-uppercase text-center">@product.Name</p>
-                                <p class="card-title text-warning text-center">by <b>@product.Author</b></p>
-                            </div>
-                            <div class="pl-1">
-                                <p class="text-dark text-opacity-75 text-center mb-0">
-                                    List Price:
-                                    <span class="text-decoration-line-through">
-                                        @product.ListPrice.ToString("c")
-                                    </span>
-                                </p>
-                            </div>
-                            <div class="pl-1">
-                                <p class="text-dark text-opacity-75 text-center">
-                                    As low as:
-                                    <span>
-                                        @product.price100.ToString("c")
-                                    </span>
-                                </p>
-                            </div>
-                        </div>
-                        <div>
-                            <a asp-action="Details"
-                            asp-route-id="@product.Id" class="btn btn-primary bg-gradient border-0 form-control">
-                                Details
-                            </a>
-                        </div>
-                    </div>
+        <div class="col-lg-3 col-sm-6 mb-4">
+            <div class="card border-0 p-3 shadow border-top border-5 rounded h-100 d-flex flex-column">
+
+                @if (product.ProductImages != null && product.ProductImages.Any())
+                {
+                    <img src="@product.ProductImages.First().ImageUrl" class="card-img-top rounded" />
+                }
+                else
+                {
+                    <img src="https://placehold.co/500x600/png" class="card-img-top rounded" />
+                }
+
+                <div class="card-body pb-0 flex-grow-1">
+                    <p class="card-title h5 text-dark opacity-75 text-uppercase text-center">@product.Name</p>
+                    <p class="card-title text-warning text-center">by <b>@product.Author</b></p>
+
+                    <p class="text-dark text-opacity-50 text-center mb-0">
+                        Category: @product.Category.Name
+                    </p>
+
+                    <p class="text-dark text-opacity-75 text-center mb-0">
+                        List Price:
+                        <span class="text-decoration-line-through">@product.ListPrice.ToString("c")</span>
+                    </p>
+
+                    <p class="text-dark text-opacity-75 text-center">
+                        As low as: <span>@product.price100.ToString("c")</span>
+                    </p>
+                </div>
+
+                <div class="mt-auto">
+                    <a asp-action="Details"
+                       asp-route-id="@product.Id"
+                       class="btn btn-primary bg-gradient border-0 form-control">
+                        Details
+                    </a>
                 </div>
             </div>
         </div>
     }
 </div>
+
+<style>
+
+    /* Force equal image heights */
+    .card-img-top {
+        height: 250px; /* Adjust as needed */
+        object-fit: cover; /* Keeps aspect ratio, crops overflow */
+    }
+
+</style>

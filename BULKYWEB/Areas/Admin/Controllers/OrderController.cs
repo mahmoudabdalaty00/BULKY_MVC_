@@ -220,7 +220,7 @@ namespace BULKYWEB.Areas.Admin.Controllers
 
                 //orderHeader by company 
                 var service = new SessionService();
-               
+
 
                 var sessionOptions = new SessionGetOptions
                 {
@@ -276,7 +276,7 @@ namespace BULKYWEB.Areas.Admin.Controllers
                     Console.WriteLine($"OrderConfirmation - PaymentStatus is {session.PaymentStatus}, not 'paid'.");
                 }
             }
-            
+
 
             return View(orderHeaderId);
         }

@@ -81,7 +81,7 @@ namespace BULKYWEB.Areas.Admin.Controllers
             {
                 pro.product.Description = "Default description"; // Use a meaningful default
             }
-            
+
             if (ModelState.IsValid)
             {
                 var claimsIdentity = (ClaimsIdentity)User.Identity;
@@ -103,7 +103,7 @@ namespace BULKYWEB.Areas.Admin.Controllers
                         pro.product.CreatedAt = DateTime.UtcNow;
                         pro.product.UpdatedAt = DateTime.UtcNow;
 
-                        if(pro.product.Description == null)
+                        if (pro.product.Description == null)
                         {
                             pro.product.Description = "sss";
                         }
@@ -216,7 +216,7 @@ namespace BULKYWEB.Areas.Admin.Controllers
 
         #endregion
 
-    
+
 
         #region Api Calls
         [HttpGet]
@@ -357,18 +357,18 @@ namespace BULKYWEB.Areas.Admin.Controllers
         }
 
         #endregion
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
     }
 }

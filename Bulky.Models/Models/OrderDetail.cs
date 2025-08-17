@@ -20,7 +20,7 @@ namespace Bulky.Models.Models
         public int ProductId { get; set; }
         [ForeignKey(nameof(ProductId))]
         [ValidateNever]
-        public Product  Product { get; set; }
+        public Product Product { get; set; }
 
 
         public int count { get; set; }

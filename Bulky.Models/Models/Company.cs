@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Bulky.Models.Models
 {
-    public class Company  : BaseEntity
+    public class Company : BaseEntity
     {
         [Key]
         public int Id { get; set; }

@@ -1,12 +1,31 @@
 ﻿@model int
 
 <section class="container pt-4">
-    <div class="row">
+    <div class="row justify-content-center">
         <div class="col-12 text-center order-confirmation">
+
+            <!-- Success Image -->
+            <img src="https://cdn-icons-png.flaticon.com/512/845/845646.png"
+                 alt="Order Success"
+                 class="img-fluid mb-4"
+                 style="max-width: 150px;" />
+
             <h1 class="text-primary" aria-live="polite">
                 Order Placed Successfully!
             </h1>
-            <p>Your Order Number is: @Model</p>
+            <p>Your Order Number is: <b>@Model</b></p>
+
+            <!-- Buttons -->
+            <div class="mt-4 d-flex justify-content-center gap-3">
+                <a  asp-area="Admin"  asp-controller="Order" asp-action="Details" asp-route-id="@Model"
+                   class="btn btn-success px-4">
+                    View My Order
+                </a>
+                <a asp-controller="Home" asp-action="Index"
+                   class="btn btn-primary px-4">
+                    Go to Home
+                </a>
+            </div>
         </div>
     </div>
 </section>
@@ -14,5 +33,23 @@
 <style>
     .order-confirmation {
         margin: 2rem 0;
+    }
+
+        .order-confirmation img {
+            animation: scaleUp 0.6s ease-in-out;
+        }
+    @@keyframes scaleUp {
+        from
+
+    {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+
     }
 </style>

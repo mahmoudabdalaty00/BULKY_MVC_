@@ -19,7 +19,7 @@ namespace Bulky.DataAccess.Repository.Repositories
         }
 
         public void Add(T entity)
-        {     
+        {
             dbSet.Add(entity);
         }
 
@@ -29,7 +29,7 @@ namespace Bulky.DataAccess.Repository.Repositories
 
             if (expression != null)
             {
-                queries = queries.Where(expression);  
+                queries = queries.Where(expression);
             }
 
             if (!string.IsNullOrEmpty(includeProperties))

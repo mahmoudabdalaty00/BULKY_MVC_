@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 
 namespace BULKYWEB.Areas.Admin.Controllers
 {
@@ -18,12 +17,12 @@ namespace BULKYWEB.Areas.Admin.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
 
-        public UserController(IUnitOfWork context, UserManager<IdentityUser> userManager)
+        public UserController(IUnitOfWork unitOfWork, UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
         {
-            _unitOfWork = context;
+            _unitOfWork = unitOfWork;
             _userManager = userManager;
+            _roleManager = roleManager;
         }
-
 
         public IActionResult Index()
         {
@@ -33,16 +32,24 @@ namespace BULKYWEB.Areas.Admin.Controllers
             return View(appUser);
         }
 
+        
+   
+       
 
+        #region    Comment
         public IActionResult RoleManagement(string userId)
         {
+            var applicationUser = _unitOfWork.ApplicationUser
+                .Get(u => u.Id == userId, includeProperties: "Company");
+
+            if (applicationUser == null)
+            {
+                return NotFound(); // Or RedirectToAction("Index");
+            }
 
             RoleManagmentVM RoleVM = new RoleManagmentVM()
             {
-                ApplicationUser = _unitOfWork.ApplicationUser
-                .Get(u => u.Id == userId,includeProperties: "Company"),
-
-
+                ApplicationUser = applicationUser,
                 RoleList = _roleManager.Roles.Select(i => new SelectListItem
                 {
                     Text = i.Name,
@@ -55,10 +62,11 @@ namespace BULKYWEB.Areas.Admin.Controllers
                 }),
             };
 
+            // Get user's current role safely
             RoleVM.ApplicationUser.Role = _userManager
-                .GetRolesAsync(_unitOfWork.ApplicationUser.Get(u => u.Id == userId))
-                .GetAwaiter().GetResult().FirstOrDefault();
-
+                .GetRolesAsync(applicationUser)
+                .GetAwaiter().GetResult()
+                .FirstOrDefault();
 
             return View(RoleVM);
         }
@@ -77,7 +85,7 @@ namespace BULKYWEB.Areas.Admin.Controllers
 
             if (!(RoleVM.ApplicationUser.Role == oldRole))
             {
-                
+
 
 
                 if (RoleVM.ApplicationUser.Role == SD.Role_Company)
@@ -90,7 +98,7 @@ namespace BULKYWEB.Areas.Admin.Controllers
                     applicationUser.CompanyId = null;
                 }
 
-                 _unitOfWork.ApplicationUser.Update(applicationUser);
+                _unitOfWork.ApplicationUser.Update(applicationUser);
                 _unitOfWork.Save();
 
 
@@ -100,7 +108,7 @@ namespace BULKYWEB.Areas.Admin.Controllers
             }
             else
             {
-                if(oldRole ==SD.Role_Company && applicationUser.CompanyId  != RoleVM.ApplicationUser.CompanyId)
+                if (oldRole == SD.Role_Company && applicationUser.CompanyId != RoleVM.ApplicationUser.CompanyId)
                 {
                     applicationUser.CompanyId = RoleVM.ApplicationUser.CompanyId;
                     _unitOfWork.ApplicationUser.Update(applicationUser);
@@ -109,26 +117,30 @@ namespace BULKYWEB.Areas.Admin.Controllers
             }
 
 
-                return RedirectToAction("Index");
+            return RedirectToAction("Index");
 
-        }
+        }   
+        
+        
+        #endregion
+
 
         #region Api Calls
         [HttpGet]
         public IActionResult GetAll()
         {
-            var appUsers = _unitOfWork.ApplicationUser.GetAll(includeProperties:"Company")
+            var appUsers = _unitOfWork.ApplicationUser.GetAll(includeProperties: "Company")
                                   .ToList();
-        
+
             foreach (var appUser in appUsers)
             {
-         
- 
+
+
                 // Assign the role name, default to empty string if no role is found
-                appUser.Role =   _userManager.GetRolesAsync (appUser)
-                    .GetAwaiter ().GetResult().FirstOrDefault() ??  "" ;
-                    
- 
+                appUser.Role = _userManager.GetRolesAsync(appUser)
+                    .GetAwaiter().GetResult().FirstOrDefault() ?? "";
+
+
                 // Handle null Company
                 if (appUser.Company == null)
                 {

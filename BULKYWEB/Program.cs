@@ -55,12 +55,13 @@ builder.Services.AddAuthentication().AddFacebook(option =>
 
 
 builder.Services.AddDistributedMemoryCache();
-builder.Services.AddSession(opt =>{
-   opt.IdleTimeout = TimeSpan.FromMinutes(10);
+builder.Services.AddSession(opt =>
+{
+    opt.IdleTimeout = TimeSpan.FromMinutes(10);
     opt.Cookie.HttpOnly = true;
     opt.Cookie.IsEssential = true;
 });
-    
+
 
 
 
@@ -107,6 +108,7 @@ app.UseAuthorization();
 app.UseSession();
 app.MapStaticAssets();
 SeedDatabase();
+app.UseStaticFiles();
 app.MapRazorPages();
 app.MapControllerRoute(
     name: "default",
@@ -118,9 +120,9 @@ app.Run();
 
 void SeedDatabase()
 {
-   using (var scope = app.Services.CreateScope())
+    using (var scope = app.Services.CreateScope())
     {
-     var initi =    scope.ServiceProvider.GetRequiredService<IDbInitializer>();
+        var initi = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
         initi.Initialize();
     }
 }

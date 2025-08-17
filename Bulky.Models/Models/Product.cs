@@ -6,7 +6,7 @@ namespace Bulky.Models.Models
 {
     public class Product : BaseEntity
     {
-    
+
         [Required]
         public string Name { get; set; }
 
@@ -41,8 +41,8 @@ namespace Bulky.Models.Models
         [ForeignKey(nameof(CategoryId))]
         [ValidateNever]
         public Category Category { get; set; }
-         
-  
+
+
         [NotMapped]
         public bool IsHidden { get; set; } = false;
 

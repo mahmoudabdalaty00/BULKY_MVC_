@@ -24,7 +24,7 @@ namespace BULKYWEB.Areas.Customer.Controllers
 
         public IActionResult Index()
         {
-            
+
             var prodList = _unitOfWork.Product
                      .GetAll(includeProperties: "Category,ProductImages");
 
@@ -42,15 +42,15 @@ namespace BULKYWEB.Areas.Customer.Controllers
         {
 
             var prod = _unitOfWork.Product
-                     .Get(u => u.Id == id, "Category,ProductImages");
+                     .Get(u => u.Id == id, "ProductImages,Category");
 
             ShoppingCart cart = new()
             {
                 Product = prod,
-                Count = 5,
+
                 ProductId = id,
             };
-
+            Console.WriteLine(cart.Product.ProductImages.Count);
             return View(cart);
         }
 
@@ -69,8 +69,10 @@ namespace BULKYWEB.Areas.Customer.Controllers
             if (shoppingCart.Count <= 0 || shoppingCart.ProductId <= 0)
             {
                 ModelState.AddModelError("", "Invalid cart data.");
-                var prod = _unitOfWork.Product.Get(u => u.Id == shoppingCart.ProductId, "Category");
+                var prod = _unitOfWork.Product
+                    .Get(u => u.Id == shoppingCart.ProductId, "ProductImages,Category");
                 shoppingCart.Product = prod;
+                Console.WriteLine(prod.ProductImages.Count);
                 return View(shoppingCart);
             }
 
@@ -81,8 +83,10 @@ namespace BULKYWEB.Areas.Customer.Controllers
                 existingCart.Count += shoppingCart.Count;
                 try
                 {
-                    TempData["success"] = "Cart Updated Successfully";
+                    _unitOfWork.ShoppingCart.Update(existingCart);
                     _unitOfWork.Save();
+                    TempData["success"] = "Cart Updated Successfully";
+
 
                 }
                 catch (DbUpdateException ex)
@@ -93,13 +97,13 @@ namespace BULKYWEB.Areas.Customer.Controllers
                     shoppingCart.Product = prod;
                     return View(shoppingCart);
                 }
-                _unitOfWork.ShoppingCart.Update(existingCart);
             }
             else
             {
-                _unitOfWork.ShoppingCart.Add(shoppingCart);
+
                 try
                 {
+                    _unitOfWork.ShoppingCart.Add(shoppingCart);
                     TempData["success"] = "Cart Updated Successfully";
                     _unitOfWork.Save();
 

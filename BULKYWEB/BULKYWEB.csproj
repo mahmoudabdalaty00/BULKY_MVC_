@@ -27,8 +27,4 @@
     <ProjectReference Include="..\Bulky.Models\Bulky.Models.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="wwwroot\img\products\" />
-  </ItemGroup>
-
 </Project>

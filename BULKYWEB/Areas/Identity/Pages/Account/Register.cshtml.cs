@@ -184,16 +184,16 @@ namespace BULKYWEB.Areas.Identity.Pages.Account
                 user.PhoneNumber = Input.PhoneNumber;
 
 
-                if(Input.Role == SD.Role_Company)
+                if (Input.Role == SD.Role_Company)
                 {
-                 user.CompanyId = Input.CompanyId;
+                    user.CompanyId = Input.CompanyId;
                 }
                 else
                 {
                     user.CompanyId = null;
                 }
 
-                    var result = await _userManager.CreateAsync(user, Input.Password);
+                var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)
                 {

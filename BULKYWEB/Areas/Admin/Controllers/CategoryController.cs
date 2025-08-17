@@ -1,12 +1,9 @@
 ﻿
 using Blky.Utility;
-using Bulky.DataAccess.Data;
 using Bulky.DataAccess.Repository.IRepository;
 using Bulky.Models.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 
 namespace BULKYWEB.Areas.Admin.Controllers
@@ -28,7 +25,7 @@ namespace BULKYWEB.Areas.Admin.Controllers
             var categories = _unitOfWork.Category.GetAll();
             return View(categories);
         }
-         
+
 
         //challenge that i check name & display to see if they both exist or not in edit ?
 
@@ -38,7 +35,7 @@ namespace BULKYWEB.Areas.Admin.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Create(Category categ )
+        public IActionResult Create(Category categ)
         {
 
             var claimsIdentity = (ClaimsIdentity)User.Identity;
@@ -51,13 +48,13 @@ namespace BULKYWEB.Areas.Admin.Controllers
                 return View(categ);
             }
 
-            if(string.IsNullOrEmpty(categ.Name))
+            if (string.IsNullOrEmpty(categ.Name))
             {
                 ModelState.AddModelError("Name", "Category name cannot be empty.");
                 return View(categ);
             }
 
-            if(categ.DisplayOrder == 0)
+            if (categ.DisplayOrder == 0)
             {
                 ModelState.AddModelError("DisplayOrder", "Display Order can not be 0");
                 return View(categ);
@@ -69,7 +66,7 @@ namespace BULKYWEB.Areas.Admin.Controllers
                 return View(categ);
             }
             var categories = _unitOfWork.Category.GetAll();
-            if(categories.Any( c=> c.Name == categ.Name ))
+            if (categories.Any(c => c.Name == categ.Name))
             {
                 ModelState.AddModelError("Name", "A category with this name already exists.");
                 return View(categ);
@@ -81,37 +78,37 @@ namespace BULKYWEB.Areas.Admin.Controllers
                 categ.UpdatedAt = DateTime.Now;
                 categ.CreatedBy = ApplicationUser.Name;
                 categ.UpdatedBy = ApplicationUser.Name;
-               
+
 
                 _unitOfWork.Category.Add(categ);
                 _unitOfWork.Save();
                 TempData["create"] = "Category Created Successfully";
-                return RedirectToAction("Index");  
+                return RedirectToAction("Index");
             }
             catch (Exception ex)
             {
-                 ModelState.AddModelError(ex.Message, "An error occurred while saving the category.");
-                return View(categ);  
+                ModelState.AddModelError(ex.Message, "An error occurred while saving the category.");
+                return View(categ);
             }
         }
         #endregion
-      
+
         #region Update Category
         public IActionResult Edit(int? id)
         {
-           if(id ==0 || id == null)
+            if (id == 0 || id == null)
             {
                 return NotFound();
             }
 
-           var category = _unitOfWork.Category.Get(c => c.Id == id);
+            var category = _unitOfWork.Category.Get(c => c.Id == id);
 
             if (category == null)
             {
                 throw new Exception($"Cannot Find Category With this Id :{id}");
             }
 
-             return View(category);
+            return View(category);
         }
         [HttpPost]
         public IActionResult Edit(Category categ)
@@ -147,7 +144,7 @@ namespace BULKYWEB.Areas.Admin.Controllers
                 return View(categ);
             }
             var categories = _unitOfWork.Category.GetAll();
-            if (categories.Any(c => c.Name == categ.Name) && categories.Any(c => c.DisplayOrder == categ.DisplayOrder)) 
+            if (categories.Any(c => c.Name == categ.Name) && categories.Any(c => c.DisplayOrder == categ.DisplayOrder))
             {
                 ModelState.AddModelError("Name", "A category with this name already exists.");
                 return View(categ);
@@ -156,7 +153,7 @@ namespace BULKYWEB.Areas.Admin.Controllers
             {
                 categ.UpdatedBy = ApplicationUser.Name;
                 categ.UpdatedAt = DateTime.Now;
-  
+
                 _unitOfWork.Category.Update(categ);
                 _unitOfWork.Save();
                 TempData["update"] = "Category Updated Successfully";
@@ -189,10 +186,10 @@ namespace BULKYWEB.Areas.Admin.Controllers
         }
         [HttpPost]
         public IActionResult Delete(Category categ)
-        {         
+        {
             try
             {
-                var categoryFromDb = _unitOfWork.Category.Get(c =>c.Id == categ.Id);
+                var categoryFromDb = _unitOfWork.Category.Get(c => c.Id == categ.Id);
                 if (categoryFromDb == null)
                 {
                     return NotFound();
