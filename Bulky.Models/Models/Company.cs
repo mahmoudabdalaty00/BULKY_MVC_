@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Bulky.Models.Models
 {
-    public class Company
+    public class Company  : BaseEntity
     {
         [Key]
         public int Id { get; set; }
@@ -21,6 +21,8 @@ namespace Bulky.Models.Models
         public string? PostalCode { get; set; }
         public string? PhoneNumber { get; set; }
         public string? Email { get; set; }
+
+
 
     }
 }

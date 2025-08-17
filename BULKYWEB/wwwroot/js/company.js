@@ -21,6 +21,7 @@ function loadDataTable() {
             { data: "city", defaultContent: "" },
             { data: "streetAddress", defaultContent: "" },
             { data: "postalCode", defaultContent: "" },
+             
             {
                 data: "id",
                 "render": function (data) {

@@ -4,6 +4,7 @@ using Bulky.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Bulky.DataAccess.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250817080632_AddBaseEntityToCompany")]
+    partial class AddBaseEntityToCompany
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -186,7 +189,7 @@ namespace Bulky.DataAccess.Data.Migrations
                         {
                             Id = 1,
                             City = "Springfield",
-                            DisplayOrder = 2,
+                            DisplayOrder = 0,
                             Email = "contact@acmesolutions.com",
                             IsHidden = false,
                             Name = "Acme Solutions",
@@ -199,7 +202,7 @@ namespace Bulky.DataAccess.Data.Migrations
                         {
                             Id = 2,
                             City = "Denver",
-                            DisplayOrder = 3,
+                            DisplayOrder = 0,
                             Email = "info@brightfuturetech.com",
                             IsHidden = false,
                             Name = "Bright Future Tech",
@@ -212,7 +215,7 @@ namespace Bulky.DataAccess.Data.Migrations
                         {
                             Id = 3,
                             City = "Austin",
-                            DisplayOrder = 4,
+                            DisplayOrder = 0,
                             Email = "support@nexusenterprises.com",
                             IsHidden = false,
                             Name = "Nexus Enterprises",
@@ -225,7 +228,7 @@ namespace Bulky.DataAccess.Data.Migrations
                         {
                             Id = 4,
                             City = "Seattle",
-                            DisplayOrder = 6,
+                            DisplayOrder = 0,
                             Email = "hello@horizoninnovations.com",
                             IsHidden = false,
                             Name = "Horizon Innovations",
@@ -238,7 +241,7 @@ namespace Bulky.DataAccess.Data.Migrations
                         {
                             Id = 5,
                             City = "Boston",
-                            DisplayOrder = 7,
+                            DisplayOrder = 0,
                             Email = "contact@pinnaclesystems.com",
                             IsHidden = false,
                             Name = "Pinnacle Systems",
@@ -251,7 +254,7 @@ namespace Bulky.DataAccess.Data.Migrations
                         {
                             Id = 6,
                             City = "Chicago",
-                            DisplayOrder = 10,
+                            DisplayOrder = 0,
                             Email = "info@summitconsulting.com",
                             IsHidden = false,
                             Name = "Summit Consulting",
@@ -264,7 +267,7 @@ namespace Bulky.DataAccess.Data.Migrations
                         {
                             Id = 7,
                             City = "Portland",
-                            DisplayOrder = 16,
+                            DisplayOrder = 0,
                             Email = "support@vanguardsolutions.com",
                             IsHidden = false,
                             Name = "Vanguard Solutions",
@@ -277,7 +280,7 @@ namespace Bulky.DataAccess.Data.Migrations
                         {
                             Id = 8,
                             City = "Miami",
-                            DisplayOrder = 1,
+                            DisplayOrder = 0,
                             Email = "contact@apexdynamics.com",
                             IsHidden = false,
                             Name = "Apex Dynamics",
@@ -290,7 +293,7 @@ namespace Bulky.DataAccess.Data.Migrations
                         {
                             Id = 9,
                             City = "Phoenix",
-                            DisplayOrder = 5,
+                            DisplayOrder = 0,
                             Email = "info@quantumventures.com",
                             IsHidden = false,
                             Name = "Quantum Ventures",
@@ -303,7 +306,7 @@ namespace Bulky.DataAccess.Data.Migrations
                         {
                             Id = 10,
                             City = "Atlanta",
-                            DisplayOrder = 8,
+                            DisplayOrder = 0,
                             Email = "hello@coreinnovations.com",
                             IsHidden = false,
                             Name = "Core Innovations",
@@ -316,7 +319,7 @@ namespace Bulky.DataAccess.Data.Migrations
                         {
                             Id = 11,
                             City = "Houston",
-                            DisplayOrder = 9,
+                            DisplayOrder = 0,
                             Email = "support@strivetech.com",
                             IsHidden = false,
                             Name = "Strive Technologies",
@@ -329,7 +332,7 @@ namespace Bulky.DataAccess.Data.Migrations
                         {
                             Id = 12,
                             City = "San Francisco",
-                            DisplayOrder = 11,
+                            DisplayOrder = 0,
                             Email = "contact@optimagroup.com",
                             IsHidden = false,
                             Name = "Optima Group",
@@ -342,7 +345,7 @@ namespace Bulky.DataAccess.Data.Migrations
                         {
                             Id = 13,
                             City = "New York",
-                            DisplayOrder = 13,
+                            DisplayOrder = 0,
                             Email = "info@nextgensolutions.com",
                             IsHidden = false,
                             Name = "NextGen Solutions",
@@ -355,7 +358,7 @@ namespace Bulky.DataAccess.Data.Migrations
                         {
                             Id = 14,
                             City = "Los Angeles",
-                            DisplayOrder = 14,
+                            DisplayOrder = 0,
                             Email = "support@eliteenterprises.com",
                             IsHidden = false,
                             Name = "Elite Enterprises",
@@ -368,7 +371,7 @@ namespace Bulky.DataAccess.Data.Migrations
                         {
                             Id = 15,
                             City = "Dallas",
-                            DisplayOrder = 18,
+                            DisplayOrder = 0,
                             Email = "hello@fusiondynamics.com",
                             IsHidden = false,
                             Name = "Fusion Dynamics",

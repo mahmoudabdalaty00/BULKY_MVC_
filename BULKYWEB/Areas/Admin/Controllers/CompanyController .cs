@@ -19,6 +19,7 @@ namespace BULKYWEB.Areas.Admin.Controllers
         public IActionResult Index()
         {
             var Companys = _unitOfWork.Company.GetAll()
+                .OrderBy(c => c.DisplayOrder)
                 .ToList();
 
 
@@ -54,9 +55,20 @@ namespace BULKYWEB.Areas.Admin.Controllers
             {
 
                 if (pro.Id == 0)
+                {
+                    pro.CreatedAt = DateTime.UtcNow;
+                    pro.CreatedBy = User.Identity?.Name ?? "System";
+                    pro.UpdatedAt = DateTime.Now;
+                    pro.UpdatedBy = User.Identity?.Name ?? "System";
                     _unitOfWork.Company.Add(pro);
+                }
                 else
+                {
+                    pro.UpdatedAt = DateTime.Now;
+                    pro.UpdatedBy = User.Identity?.Name ?? "System";
                     _unitOfWork.Company.Update(pro);
+                }
+
 
                 _unitOfWork.Save();
                 TempData["success"] = "Company saved successfully";
@@ -126,7 +138,10 @@ namespace BULKYWEB.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            var companies = _unitOfWork.Company.GetAll().ToList();
+            var companies = _unitOfWork.Company
+                .GetAll()
+                .OrderBy(c => c.DisplayOrder)
+                .ToList();
 
             return Json(new { data = companies });
         }

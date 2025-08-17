@@ -4,7 +4,7 @@
     <div class="card-header bg-secondary bg-gradient m-lg-0 py-3">
         <div class="row">
             <div class="text-center col-12">
-                <h2 class="text-primary">@(Model.Id !=0?"Update" : "Create")Comapny</h2>
+                <h2 class="text-primary">@(Model.Id !=0?"Update" : "Create") Comapny</h2>
             </div>
         </div>
     </div>
@@ -24,7 +24,7 @@
                         
 
                         <div class="mb-3 pt-1 pb-1 row">
-                            <label class="form-label">Product Name</label>
+                            <label class="form-label">Company Name</label>
                             <input   asp-for="Name" type="text" class="form-control" />
                             <span asp-validation-for="Name" class="text-danger"></span>
                         </div>
@@ -63,6 +63,12 @@
                             <label class="form-label">Phone Number</label>
                             <input   asp-for="PhoneNumber" type="text"  class="form-control" />
                             <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3 pt-1 pb-1 row">
+                            <label class="form-label">Display Order</label>
+                            <input   asp-for="DisplayOrder" type="text"  class="form-control" />
+                            <span asp-validation-for="DisplayOrder" class="text-danger"></span>
                         </div>
                         <div class="row">
                             <div class="col-6 col-md-3">
