@@ -25,6 +25,10 @@ namespace BULKYWEB.Areas.Customer.Controllers
         public IActionResult Index()
         {
 
+            if (User.IsInRole(SD.Role_Admin))
+            {
+                return RedirectToAction("Index", "Admin", new { area = "Admin" });
+            }
             var prodList = _unitOfWork.Product
                      .GetAll(includeProperties: "Category,ProductImages");
 
