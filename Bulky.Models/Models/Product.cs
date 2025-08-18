@@ -47,5 +47,11 @@ namespace Bulky.Models.Models
         [ValidateNever]
         public List<ProductImage> ProductImages { get; set; }
 
+       
+        
+        public virtual ICollection<StoreProduct> StoreProducts { get; set; } = new List<StoreProduct>();
+
+        public virtual ICollection<Store> Stores { get; set; } = new List<Store>();
+
     }
 }

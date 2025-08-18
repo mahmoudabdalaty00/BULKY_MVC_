@@ -1,0 +1,85 @@
+﻿@model List<Store>
+
+<div class="container mt-3 mb-3">
+    <div class="row pt-4 pb-3">
+        <div class="col-6">
+            <h2 class="text-primary">Stores List</h2>
+        </div>
+        <div class="col-6 text-end">
+            <a asp-controller="Store" asp-action="UpSert"
+               class="btn btn-primary">
+                Add Store <i class="bi bi-plus-circle"></i>
+            </a>
+        </div>
+    </div>
+
+    <table id="myTable" class="table table-hover table-bordered w-100">
+        <thead>
+            <tr class="table-primary text-center">
+
+                <th scope="col">Name</th>
+                <th scope="col">Email</th>
+                <th scope="col">IsActive</th>
+                <th scope="col">City</th>
+                <th scope="col">Country</th>
+             
+                <th ></th>
+           
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+
+
+    <!-- ✅ Your custom JS -->
+    <script src="~/js/store.js"></script>
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

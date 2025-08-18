@@ -1,0 +1,251 @@
+﻿ @model StoreVM
+
+<div class="card shadow border-0 mt-4">
+    <div class="card-header bg-secondary bg-gradient m-lg-0 py-3">
+        <div class="row">
+            <div class="text-center col-12">
+                <h2 class="text-primary">@(Model.Store.Id != 0 ? "Update" : "Create") Store</h2>
+            </div>
+        </div>
+    </div>
+    <div class="card-body p-4">
+        <form asp-action="Upsert" method="post">
+            <div class="row">
+                <div class="col-10">
+                    <div class="border border-2 border-secondary p-5">
+                        <div asp-validation-summary="All" class="text-danger"></div>
+                        <input asp-for="@Model.Store.Id" type="hidden" />
+
+                        <div class="mb-3">
+                            <label asp-for="@Model.Store.Name" class="form-label"></label>
+                            <input asp-for="@Model.Store.Name" class="form-control" />
+                            <span asp-validation-for="@Model.Store.Name" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="@Model.Store.Description" class="form-label"></label>
+                            <textarea asp-for="@Model.Store.Description" class="form-control"></textarea>
+                            <span asp-validation-for="@Model.Store.Description" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="@Model.Store.Address" class="form-label"></label>
+                            <input asp-for="@Model.Store.Address" class="form-control" />
+                            <span asp-validation-for="@Model.Store.Address" class="text-danger"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="@Model.Store.City" class="form-label"></label>
+                                <input asp-for="@Model.Store.City" class="form-control" />
+                                <span asp-validation-for="@Model.Store.City" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="@Model.Store.State" class="form-label"></label>
+                                <input asp-for="@Model.Store.State" class="form-control" />
+                                <span asp-validation-for="@Model.Store.State" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="@Model.Store.Country" class="form-label"></label>
+                                <input asp-for="@Model.Store.Country" class="form-control" />
+                                <span asp-validation-for="@Model.Store.Country" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="@Model.Store.PostalCode" class="form-label"></label>
+                                <input asp-for="@Model.Store.PostalCode" class="form-control" />
+                                <span asp-validation-for="@Model.Store.PostalCode" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="@Model.Store.PhoneNumber" class="form-label"></label>
+                                <input asp-for="@Model.Store.PhoneNumber" class="form-control" />
+                                <span asp-validation-for="@Model.Store.PhoneNumber" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="@Model.Store.Email" class="form-label"></label>
+                                <input asp-for="@Model.Store.Email" class="form-control" />
+                                <span asp-validation-for="@Model.Store.Email" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <!-- ✅ Checkbox for Active/Inactive -->
+                        <div class="checkbox-wrapper-65 my-3">
+                            <label asp-for="@Model.Store.IsActive" for="cbk1-65">
+                                <input asp-for="@Model.Store.IsActive" type="checkbox" id="cbk1-65" />
+                                <span class="cbx">
+                                    <svg width="12px" height="11px" viewBox="0 0 12 11">
+                                        <polyline points="1 6.29411765 4.5 10 11 1"></polyline>
+                                    </svg>
+                                </span>
+                                <span>Is Active</span>
+                            </label>
+                        </div>
+                        <!-- ✅ Multi-select products -->
+                        <!-- Multi-select products -->
+<div class="mb-3">
+    <label for="ProductSelect" class="form-label">Select Products</label>
+    <select id="ProductSelect" name="SelectedProductIds" class="form-control" multiple="multiple">
+        @foreach (var product in Model.ProductList)
+        {
+                                    <option value="@product.Value" selected="@(Model.SelectedProductIds.Contains(int.Parse(product.Value)) ? "selected" : null)">@product.Text</option>
+        }
+    </select>
+    <small class="form-text text-muted">Hold Ctrl (or Cmd on Mac) to select multiple products</small>
+</div>
+
+<!-- Display selected products with additional options (for editing existing store) -->
+@if (Model.Store.Id != 0 && Model.StoreProducts.Any())
+{
+    <div class="mb-3">
+        <h5>Current Products in Store</h5>
+        <div class="table-responsive">
+            <table class="table table-sm table-striped">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Stock Quantity</th>
+                        <th>Store Price</th>
+                        <th>Featured</th>
+                    </tr>
+                </thead>
+                <tbody id="selectedProductsTable">
+                    @for (int i = 0; i < Model.StoreProducts.Count; i++)
+                    {
+                        <tr>
+                            <td>@Model.StoreProducts[i].ProductName</td>
+                            <td>
+                                <input asp-for="StoreProducts[i].ProductId" type="hidden" />
+                                <input asp-for="StoreProducts[i].StockQuantity" class="form-control form-control-sm" type="number" min="0" />
+                            </td>
+                            <td>
+                                <input asp-for="StoreProducts[i].StoreSpecificPrice" class="form-control form-control-sm" type="number" step="0.01" min="0" />
+                            </td>
+                            <td>
+                                <input asp-for="StoreProducts[i].IsFeatured" type="checkbox" class="form-check-input" />
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+} 
+
+        
+
+      
+
+                        <div class="row">
+                            <div class="col-6 col-md-3">
+                                @if (Model.Store.Id == 0)
+                                {
+                                    <button type="submit" class="btn btn-primary form-control">Create</button>
+                                }
+                                else
+                                {
+                                    <button type="submit" class="btn btn-primary form-control">Update</button>
+                                }
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <a asp-controller="Store" asp-action="Index"
+                                   class="btn btn-secondary border form-control">Back to Store List</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-2">
+                    <!-- Placeholder for future store logo or image -->
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <!-- Select2 -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Initialize Select2 with enhanced options
+            $("#ProductSelect").select2({
+                placeholder: "Select products for this store",
+                allowClear: true,
+                closeOnSelect: false, // Keep dropdown open for multiple selections
+                width: '100%',
+                templateResult: formatProduct,
+                templateSelection: formatProductSelection
+            });
+
+            // Optional: Format how products appear in dropdown
+            function formatProduct(product) {
+                if (!product.id) {
+                    return product.text;
+                }
+
+                var $product = $(
+                    '<span>' + product.text + '</span>'
+                );
+                return $product;
+            }
+
+            // Optional: Format how selected products appear
+            function formatProductSelection(product) {
+                return product.text;
+            }
+
+            // Handle selection changes (optional - for dynamic updates)
+            $('#ProductSelect').on('select2:select select2:unselect', function (e) {
+                var selectedProducts = $(this).val();
+                console.log('Selected products:', selectedProducts);
+
+                // You can add logic here to show/hide additional product options
+                // or update the products table dynamically
+            });
+
+            // Form validation enhancement
+            $('form').on('submit', function(e) {
+                var selectedProducts = $('#ProductSelect').val();
+                if (selectedProducts && selectedProducts.length === 0) {
+                    // Optional: Warn if no products selected
+                    if (!confirm('No products selected for this store. Continue?')) {
+                        e.preventDefault();
+                        return false;
+                    }
+                }
+            });
+        });
+
+        // Optional: Function to add product details dynamically
+        function addProductDetailsRow(productId, productName) {
+            var tableBody = $('#selectedProductsTable');
+            var rowCount = tableBody.find('tr').length;
+
+            var newRow = `
+                <tr>
+                    <td>${productName}</td>
+                    <td>
+                        <input name="StoreProducts[${rowCount}].ProductId" type="hidden" value="${productId}" />
+                        <input name="StoreProducts[${rowCount}].StockQuantity" class="form-control form-control-sm" type="number" min="0" value="0" />
+                    </td>
+                    <td>
+                        <input name="StoreProducts[${rowCount}].StoreSpecificPrice" class="form-control form-control-sm" type="number" step="0.01" min="0" />
+                    </td>
+                    <td>
+                        <input name="StoreProducts[${rowCount}].IsFeatured" type="checkbox" class="form-check-input" />
+                    </td>
+                </tr>
+            `;
+
+            tableBody.append(newRow);
+        }
+    </script>
+}

@@ -4,6 +4,7 @@ using Bulky.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Bulky.DataAccess.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250818111507_AddStorePart#1")]
+    partial class AddStorePart1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -925,9 +928,6 @@ namespace Bulky.DataAccess.Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -964,9 +964,6 @@ namespace Bulky.DataAccess.Data.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
                     b.ToTable("Stores");
@@ -978,7 +975,7 @@ namespace Bulky.DataAccess.Data.Migrations
                             Address = "123 Tech Street",
                             City = "Cairo",
                             Country = "Egypt",
-                            CreatedAt = new DateTime(2025, 8, 18, 12, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2025, 8, 18, 11, 15, 5, 776, DateTimeKind.Utc).AddTicks(4653),
                             Description = "Specialized in computers and accessories",
                             Email = "main@store.com",
                             IsActive = true,
@@ -993,7 +990,7 @@ namespace Bulky.DataAccess.Data.Migrations
                             Address = "456 Mobile Avenue",
                             City = "Giza",
                             Country = "Egypt",
-                            CreatedAt = new DateTime(2025, 8, 18, 12, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2025, 8, 18, 11, 15, 5, 776, DateTimeKind.Utc).AddTicks(5233),
                             Description = "Smartphones and gadgets",
                             Email = "mobile@store.com",
                             IsActive = true,
@@ -1008,7 +1005,7 @@ namespace Bulky.DataAccess.Data.Migrations
                             Address = "789 Home Road",
                             City = "Alexandria",
                             Country = "Egypt",
-                            CreatedAt = new DateTime(2025, 8, 18, 12, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2025, 8, 18, 11, 15, 5, 776, DateTimeKind.Utc).AddTicks(5236),
                             Description = "Home appliances and electronics",
                             Email = "appliance@store.com",
                             IsActive = true,
@@ -1255,21 +1252,6 @@ namespace Bulky.DataAccess.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("ProductStore", b =>
-                {
-                    b.Property<int>("ProductsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StoresId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ProductsId", "StoresId");
-
-                    b.HasIndex("StoresId");
-
-                    b.ToTable("ProductStore");
-                });
-
             modelBuilder.Entity("Bulky.Models.Models.ApplicationUser", b =>
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
@@ -1439,21 +1421,6 @@ namespace Bulky.DataAccess.Data.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("ProductStore", b =>
-                {
-                    b.HasOne("Bulky.Models.Models.Product", null)
-                        .WithMany()
-                        .HasForeignKey("ProductsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Bulky.Models.Models.Store", null)
-                        .WithMany()
-                        .HasForeignKey("StoresId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

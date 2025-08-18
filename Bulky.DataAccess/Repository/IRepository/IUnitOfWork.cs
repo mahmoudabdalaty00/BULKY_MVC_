@@ -10,6 +10,8 @@
         IOrderHeaderRepository OrderHeader { get; }
         IOrderDetailRepository OrderDetail { get; }
         IProductImageRepository ProductImage { get; }
+        IStoreRepository Store { get; }
+        IStoreProductRepository StoreProduct { get; }
         void Save();
     }
 }

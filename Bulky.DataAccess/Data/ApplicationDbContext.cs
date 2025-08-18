@@ -22,10 +22,32 @@ namespace Bulky.DataAccess.Data
         public DbSet<OrderHeader> OrderHeaders { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<ProductImage> ProductImages { get; set; }
+        public DbSet<Store> Stores { get; set; }
+        public DbSet<StoreProduct> StoreProducts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<StoreProduct>()
+          .HasKey(sp => new { sp.StoreId, sp.ProductId });
+
+            modelBuilder.Entity<StoreProduct>()
+                .HasOne(sp => sp.Store)
+                .WithMany(s => s.StoreProducts)
+                .HasForeignKey(sp => sp.StoreId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<StoreProduct>()
+                .HasOne(sp => sp.Product)
+                .WithMany(p => p.StoreProducts)
+                .HasForeignKey(sp => sp.ProductId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            base.OnModelCreating(modelBuilder);
+
+
+
 
             //this repeated for each class
             // modelBuilder.ApplyConfiguration(new CategorySeed());
