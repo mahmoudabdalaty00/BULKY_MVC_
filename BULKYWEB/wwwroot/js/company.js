@@ -7,11 +7,16 @@ $(document).ready(function () {
 function loadDataTable() {
     dataTable = $('#myTable').DataTable({
         ajax: {
-            url: '/Admin/company/getall',
+            url: '/Admin/Company/GetAll',
             dataSrc: 'data',
             error: function (xhr, error, thrown) {
-                console.log('DataTables Ajax Error:', error);
-                console.log('Response:', xhr.responseText);
+                console.error('DataTables AJAX Error:', error);
+                console.error('Response:', xhr.responseText);
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Failed to load company data. Check the console for details.',
+                    icon: 'error'
+                });
             }
         },
         columns: [
@@ -21,18 +26,17 @@ function loadDataTable() {
             { data: "city", defaultContent: "" },
             { data: "streetAddress", defaultContent: "" },
             { data: "postalCode", defaultContent: "" },
-             
             {
                 data: "id",
-                "render": function (data) {
+                render: function (data) {
                     return `<div class="w-75 btn-group" role="group"> 
-                          <a href="/admin/company/upsert?id=${data}" class="btn btn-primary mx-2">
+                          <a href="/Admin/Company/Upsert?id=${data}" class="btn btn-primary mx-2">
                                         <i class="bi bi-pencil-fill"></i> Edit
                          </a>
-                         <a onclick="Delete('/admin/company/delete?id=${data}')" class="btn btn-danger mx-2">
+                         <a onclick="Delete('/Admin/Company/Delete?id=${data}')" class="btn btn-danger mx-2">
                                         <i class="bi bi-trash3"></i> Delete
                          </a>
-                  </div>`
+                  </div>`;
                 }
             }
         ],
@@ -77,7 +81,7 @@ function Delete(url) {
                     }
                 },
                 error: function (xhr, status, error) {
-                    console.log('Delete Error:', error);
+                    console.error('Delete Error:', error);
                     Swal.fire({
                         title: 'Error!',
                         text: 'Error deleting company',

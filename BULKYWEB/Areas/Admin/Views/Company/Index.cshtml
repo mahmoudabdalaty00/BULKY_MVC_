@@ -4,7 +4,6 @@
     ViewBag.Title = "Company List";
 }
 
- 
 <div class="container">
     <div class="row pt-4 pb-3">
         <div class="col-6">
@@ -13,7 +12,7 @@
             </h2>
         </div>
         <div class="col-6 text-end">
-            <a asp-controller="Company" asp-action="UpSert"
+            <a asp-controller="Company" asp-action="Upsert"
                class="btn btn-primary">
                 Add Company <i class="bi bi-plus-circle"></i>
             </a>
@@ -29,10 +28,7 @@
                 <th scope="col">City</th>
                 <th scope="col">Address</th>
                 <th scope="col">Postal Code</th>
-                
                 <th></th>
-                <th></th>
-       
             </tr>
         </thead>
         <tbody>
@@ -42,7 +38,5 @@
 </div>
 
 @section Scripts {
- 
-    <!-- Your custom script -->
     <script src="~/js/company.js"></script>
 }

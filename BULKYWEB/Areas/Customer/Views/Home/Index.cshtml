@@ -4,8 +4,7 @@
     @foreach (var product in Model)
     {
         <div class="col-lg-3 col-sm-6 mb-4">
-            <div class="card border-0 p-3 shadow border-top border-5 rounded h-100 d-flex flex-column">
-
+            <div class="card border-0 p-3 shadow border-top border-5 rounded h-100 d-flex flex-column" onclick="window.location.href='@Url.Action("Details", new { id = product.Id })'" style="cursor: pointer;">
                 @if (product.ProductImages != null && product.ProductImages.Any())
                 {
                     <img src="@product.ProductImages.First().ImageUrl" class="card-img-top rounded" />
@@ -46,11 +45,33 @@
 </div>
 
 <style>
-
-    /* Force equal image heights */
+     
     .card-img-top {
-        height: 250px; /* Adjust as needed */
-        object-fit: cover; /* Keeps aspect ratio, crops overflow */
+        height: 250px;  
+        object-fit: cover;  
     }
 
+     
+    .card {
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+         
+        .card .btn:hover {
+            transform: none;
+            box-shadow: none;
+        }
 </style>
+
+<script>
+    document.querySelectorAll('.card .btn').forEach(button => {
+        button.addEventListener('click', function (e) {
+            e.stopPropagation(); 
+        });
+    });
+</script>
