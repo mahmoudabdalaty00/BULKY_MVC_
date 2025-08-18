@@ -1,0 +1,117 @@
+﻿@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+
+<div class="grid-container">
+    <a asp-area="Admin" asp-controller="Category" asp-action="Index" class="card">
+        <div class="title">Category</div>
+        <div class="icon"><i class="fa-solid fa-laptop-code"></i></div>
+    </a>
+
+    <a asp-area="Admin" asp-controller="Product" asp-action="Index" class="card">
+        <div class="title">Product</div>
+        <div class="icon"><i class="fa-solid fa-shield-halved"></i></div>
+    </a>
+
+    <a asp-area="Admin" asp-controller="Company" asp-action="Index" class="card">
+        <div class="title">Company</div>
+        <div class="icon"><i class="fa-solid fa-building"></i></div>
+    </a>
+
+    <a asp-area="Identity" asp-page="/Account/Manage/Index" class="card">
+        <div class="title">Manage Account </div>
+        <div class="icon"><i class="fa-solid fa-users"></i></div>
+    </a>
+
+    <a asp-area="Admin" asp-controller="User" asp-action="Index" class="card">
+        <div class="title">Manage Users </div>
+        <div class="icon"><i class="fa-solid fa-users"></i></div>
+    </a>
+
+    <a asp-area="Identity" asp-page="/Account/Register" class="card">
+        <div class="title">Create User</div>
+        <div class="icon"><i class="fa-solid fa-user-plus"></i></div>
+    </a>
+
+    <form asp-area="Identity" asp-page="/Account/Logout" method="post" class="card logout-card">
+        <button type="submit" class="title">Logout</button>
+        <div class="icon"><i class="fa-solid fa-right-from-bracket"></i></div>
+    </form>
+</div>
+
+<style>
+    body {
+        background: #d0dbe1;
+        padding: 2rem;
+    }
+
+    .grid-container {
+        width: min(75rem, 100%);
+        margin-inline: auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(20rem, 100%), 1fr));
+        gap: 2rem;
+    }
+
+        .grid-container a.card,
+        .grid-container form.card {
+            --grad: red, blue;
+            padding: 2.5rem;
+            background-image: linear-gradient(to bottom left, #e0e4e5, #f2f6f9);
+            border-radius: 2rem;
+            gap: 1.5rem;
+            display: grid;
+            grid-template: 'title icon' 'content content' 'bar bar' / 1fr auto;
+            font-family: system-ui, sans-serif;
+            color: #444447;
+            box-shadow: inset -2px 2px hsl(0 0 100% / 1), -20px 20px 40px hsl(0 0 0 / .25);
+            text-decoration: none;
+            cursor: pointer;
+            transition: transform 0.2s ease-in-out;
+        }
+
+            .grid-container a.card:hover,
+            .grid-container form.card:hover {
+                transform: translateY(-5px);
+            }
+
+    .title {
+        font-size: 1.5rem;
+        grid-area: title;
+        align-self: end;
+        text-transform: uppercase;
+        font-weight: 500;
+        word-break: break-word;
+    }
+
+    .icon {
+        grid-area: icon;
+        font-size: 3rem;
+    }
+
+        .icon > i {
+            color: transparent;
+            background: linear-gradient(to right, var(--grad));
+            -webkit-background-clip: text;
+            background-clip: text;
+        }
+
+    .logout-card button {
+        all: unset;
+        cursor: pointer;
+        font-size: 1.5rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        color: inherit;
+    }
+
+    .grid-container a.card::after,
+    .grid-container form.card::after {
+        content: "";
+        grid-area: bar;
+        height: 2px;
+        background-image: linear-gradient(90deg, var(--grad));
+    }
+</style>

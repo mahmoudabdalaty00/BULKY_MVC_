@@ -43,10 +43,7 @@ namespace Bulky.Models.Models
         public Category Category { get; set; }
 
 
-        [NotMapped]
-        public bool IsHidden { get; set; } = false;
-
-
+      
         [ValidateNever]
         public List<ProductImage> ProductImages { get; set; }
 

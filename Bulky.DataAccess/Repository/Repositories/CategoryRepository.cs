@@ -25,6 +25,8 @@ namespace Bulky.DataAccess.Repository.Repositories
             {
                 categoryFromDb.Name = category.Name;
                 categoryFromDb.DisplayOrder = category.DisplayOrder;
+                categoryFromDb.IsHidden = category.IsHidden;
+
                 categoryFromDb.UpdatedAt = DateTime.UtcNow;
             }
         }

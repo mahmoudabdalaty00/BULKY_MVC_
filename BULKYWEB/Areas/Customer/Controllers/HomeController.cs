@@ -30,8 +30,9 @@ namespace BULKYWEB.Areas.Customer.Controllers
 
             IEnumerable<Product> ShownList;
 
-            var shownList = prodList
-                   .OrderBy(x => x.DisplayOrder)
+            var shownList = prodList 
+                   .Where(x => x.IsHidden == false)
+                   .OrderBy(x => x.DisplayOrder)                 
                   .ToList();
 
             return View(shownList);

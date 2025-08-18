@@ -18,7 +18,7 @@ namespace Bulky.DataAccess.Repository.Repositories
 
             if (pro != null)
             {
-                // Update properties individually to avoid replacing the tracked entity reference
+           
                 pro.Name = product.Name;
                 pro.Description = product.Description;
                 pro.ISBN = product.ISBN;
@@ -31,10 +31,8 @@ namespace Bulky.DataAccess.Repository.Repositories
                 pro.UpdatedAt = DateTime.UtcNow;
                 pro.ProductImages = product.ProductImages;
                 pro.DisplayOrder = product.DisplayOrder;
-                //if (product.ImageUrl != null)
-                //{
-                //    pro.ImageUrl = product.ImageUrl;
-                //}
+                pro.IsHidden = product.IsHidden;
+          
                 _context.Products.Update(pro);
                 _context.SaveChanges();
             }

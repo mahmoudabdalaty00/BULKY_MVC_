@@ -25,6 +25,7 @@ namespace BULKYWEB.Areas.Admin.Controllers
         {
             var products = _unitOfWork.Product.GetAll(includeProperties: "Category")
                 .OrderBy(x => x.DisplayOrder)
+                //.Where(x => x.IsHidden = false)
                 .ToList();
 
 
@@ -224,6 +225,7 @@ namespace BULKYWEB.Areas.Admin.Controllers
         {
             var products = _unitOfWork.Product.GetAll(includeProperties: "Category")
               .OrderBy(x => x.DisplayOrder)
+              //.Where(x => x.IsHidden == false)
               .ToList();
 
             return Json(new

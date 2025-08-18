@@ -22,7 +22,10 @@ namespace BULKYWEB.Areas.Admin.Controllers
 
         public IActionResult Index()
         {
-            var categories = _unitOfWork.Category.GetAll();
+            var categories = _unitOfWork.Category.GetAll()
+                .Where(a => a.IsHidden == false)
+                .ToList();
+            
             return View(categories);
         }
 
@@ -143,12 +146,7 @@ namespace BULKYWEB.Areas.Admin.Controllers
                 ModelState.AddModelError("", "A Category can not be Number.");
                 return View(categ);
             }
-            var categories = _unitOfWork.Category.GetAll();
-            if (categories.Any(c => c.Name == categ.Name) && categories.Any(c => c.DisplayOrder == categ.DisplayOrder))
-            {
-                ModelState.AddModelError("Name", "A category with this name already exists.");
-                return View(categ);
-            }
+           
             try
             {
                 categ.UpdatedBy = ApplicationUser.Name;
