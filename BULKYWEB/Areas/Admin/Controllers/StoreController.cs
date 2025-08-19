@@ -1,12 +1,15 @@
-﻿using Bulky.DataAccess.Repository.IRepository;
+﻿using Blky.Utility;
+using Bulky.DataAccess.Repository.IRepository;
 using Bulky.Models.Models;
 using Bulky.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace BULKYWEB.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = SD.Role_Admin)]
     public class StoreController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -60,17 +63,20 @@ namespace BULKYWEB.Areas.Admin.Controllers
                 storeVM.Store = storeDb;
 
 
-                storeVM.SelectedProductIds = storeDb.StoreProducts.Select(sp => sp.ProductId).ToList();
+                storeVM.SelectedProductIds = storeDb.StoreProducts
+                        .Select(sp => sp.ProductId).ToList();
 
 
-                storeVM.StoreProducts = storeDb.StoreProducts.Select(sp => new StoreProductVM
+                storeVM.StoreProducts = storeDb.StoreProducts
+                    .Select(sp => new StoreProductVM
                 {
                     ProductId = sp.ProductId,
                     ProductName = sp.Product.Name,
                     StockQuantity = sp.StockQuantity,
                     StoreSpecificPrice = sp.StoreSpecificPrice,
                     IsFeatured = sp.IsFeatured
-                }).ToList();
+                })
+                    .ToList();
 
                 return View(storeVM);
             }
@@ -96,7 +102,6 @@ namespace BULKYWEB.Areas.Admin.Controllers
                 }
 
                 _unitOfWork.Save();
-
 
                 ManageStoreProducts(storeVM);
 
@@ -132,7 +137,9 @@ namespace BULKYWEB.Areas.Admin.Controllers
             }
 
 
-            var existingProductIds = existingStoreProducts.Select(esp => esp.ProductId).ToList();
+            var existingProductIds = existingStoreProducts
+                .Select(esp => esp.ProductId).ToList();
+
             var newProductIds = storeVM.SelectedProductIds
                 .Where(spId => !existingProductIds.Contains(spId))
                 .ToList();

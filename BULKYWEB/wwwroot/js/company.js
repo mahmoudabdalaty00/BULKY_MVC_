@@ -39,7 +39,13 @@ function loadDataTable() {
                   </div>`;
                 }
             }
-        ],
+        ], columnDefs: [
+            {
+                targets: -1, // last column (Edit/Delete)
+                orderable: false, // optional: prevent sorting on buttons
+                searchable: false, // optional: prevent searching
+                width: "150px" // set minimum width
+            },
         processing: true,
         language: {
             processing: "Loading companies..."

@@ -16,34 +16,43 @@ function loadDataTable() {
             dataSrc: 'data'
         },
         columns: [
-            { data: "name" },
-            { data: "price" },
-            { data: "author" },
+            { data: "name"   },
+            { data: "price"    },
+            { data: "author"  },
             { data: "isbn" },
             {
                 data: "category",
                 render: function (data) {
                     return data ? data.name : "";
-                }
+                } 
             },
-            { data: "displayOrder" },
+            { data: "displayOrder"  },
             {
-                data: "id",
+                data: "id"  ,
                 render: function (data) {
                     return `
-                        <div class="w-75 btn-group" role="group"> 
+                        <div style="width:100%" class=" btn-group" role="group">
                             <a href="/admin/product/upsert?id=${data}" 
-                               class="btn btn-primary mx-2">
+                               class="btn btn-primary mx-2   ">
                                 <i class="bi bi-pencil-fill"></i> Edit
                             </a>
                             <a onClick=Delete('/admin/product/delete?id=${data}') 
-                               class="btn btn-danger mx-2">
+                               class="btn btn-danger mx-2  ">
                                 <i class="bi bi-trash3"></i> Delete
                             </a>
                         </div>`;
                 }
             }
-        ],
+        ], columnDefs: [
+            {
+                targets: -1, // last column (Edit/Delete)
+                orderable: false, // optional: prevent sorting on buttons
+                searchable: false, // optional: prevent searching
+                width: "150px" // set minimum width
+            }
+        ]
+,
+       
         paging: true,
         searching: true,
         lengthChange: true,
