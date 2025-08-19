@@ -98,6 +98,7 @@ namespace BULKYWEB.Areas.Admin.Controllers
                 else
                 {
                     storeVM.Store.UpdatedAt = DateTime.UtcNow;
+               
                     _unitOfWork.Store.Update(storeVM.Store);
                 }
 

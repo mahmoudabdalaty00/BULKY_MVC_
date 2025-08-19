@@ -65,7 +65,7 @@ namespace BULKYWEB.Areas.Customer.Controllers
         public IActionResult Details([Bind("ProductId,Count")] ShoppingCart shoppingCart)
         {
             var claimsIdentity = (ClaimsIdentity)User.Identity;
-            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var userId =   claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 
             // shoppingCart.Id = 0; // Ensure Id is not set
             shoppingCart.ApplicationUserId = userId;

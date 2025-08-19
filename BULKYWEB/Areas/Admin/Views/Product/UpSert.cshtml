@@ -4,25 +4,23 @@
     <div class="card-header bg-secondary bg-gradient m-lg-0 py-3">
         <div class="row">
             <div class="text-center col-12">
-                <h2 class="text-primary">@(Model.product.Id !=0?"Update" : "Create")Product</h2>
+                <h2 class="text-primary">@(Model.product.Id != 0 ? "Update" : "Create") Product</h2>
             </div>
         </div>
     </div>
-    <div class="card-body p-4 ">
-
+    <div class="card-body p-4">
         <form asp-action="UpSert" method="post" enctype="multipart/form-data">
-
             <div class="row">
                 <div class="col-10">
-                    <div class="border border-2 border-secondary p-5 ">
+                    <div class="border border-2 border-secondary p-5">
                         <div class="row pb-2">
                             <hr class="border-2 border-dark" />
                         </div>
 
                         <div asp-validation-summary="All" class="text-danger"></div>
                         <input asp-for="product.Id" class="form-control" hidden />
-                      @*   <input asp-for="product.ImageUrl" class="form-control" hidden /> *@
-                       <div class="mb-3">
+
+                        <div class="mb-3">
                             <label asp-for="product.Name" class="form-label"></label>
                             <input asp-for="product.Name" class="form-control" />
                             <span asp-validation-for="product.Name" class="text-danger"></span>
@@ -75,7 +73,7 @@
                             <input asp-for="product.price100" class="form-control" />
                             <span asp-validation-for="product.price100" class="text-danger"></span>
                         </div>
- 
+
                         <div class="mb-3">
                             <label asp-for="product.CategoryId" class="form-label"></label>
                             <select asp-for="product.CategoryId" asp-items="@Model.listItems" class="form-control">
@@ -83,17 +81,45 @@
                             </select>
                             <span asp-validation-for="product.CategoryId" class="text-danger"></span>
                         </div>
+
+                        <!-- ✅ Simplified Multi-select stores (no additional fields) -->
+                        <div class="mb-3">
+                            <label for="StoreSelect" class="form-label">Select Stores</label>
+                            <select id="StoreSelect" name="SelectedStoreIds" class="form-control" multiple="multiple">
+                                @if (Model.StoreList != null)
+                                {
+                                    @foreach (var store in Model.StoreList)
+                                    {
+                                   
+                                        <option value="@store.Value" selected="@(Model.SelectedStoreIds.Contains(int.Parse(store.Value)) ? "selected" : null)">@store.Text</option>
+                                        
+                                    }
+                                }
+                            </select>
+                            <small class="form-text text-muted">Select multiple stores where this product will be available</small>
+                        </div>
+
+                        <!-- Display currently selected stores (read-only) -->
+                        @if (Model.SelectedStoreIds != null && Model.SelectedStoreIds.Any())
+                        {
+                            <div class="mb-3" id="selectedStoresDisplay">
+                                <h6>Currently Selected Stores:</h6>
+                                <div class="d-flex flex-wrap gap-2" id="selectedStoresList">
+                                    @foreach (var storeId in Model.SelectedStoreIds)
+                                    {
+                                        var storeName = Model.StoreList?.FirstOrDefault(s => s.Value == storeId.ToString())?.Text ?? "Unknown Store";
+                                        <span class="badge bg-primary">@storeName</span>
+                                    }
+                                </div>
+                            </div>
+                        }
+
                         <div class="mb-3">
                             <label asp-for="product.ProductImages" class="form-label"></label>
                             <input type="file" name="files" class="form-control border-0 shadow" multiple />
-                            
-                          @*   <span asp-validation-for="product.ImageUrl" class="text-danger"></span> *@
                         </div>
 
-
                         <!-- ✅ Checkbox for IsHidden -->
-                     
-
                         <div class="checkbox-wrapper-65">
                             <label asp-for="product.IsHidden" for="cbk1-65">
                                 <input asp-for="product.IsHidden" type="checkbox" id="cbk1-65">
@@ -106,8 +132,6 @@
                             </label>
                         </div>
 
-
-
                         <div class="row">
                             <div class="col-6 col-md-3">
                                 @if (Model.product.Id == 0)
@@ -118,7 +142,6 @@
                                 {
                                     <button type="submit" class="btn btn-primary form-control">Update</button>
                                 }
-
                             </div>
                             <div class="col-6 col-md-3">
                                 <a asp-controller="Product" asp-action="Index"
@@ -128,73 +151,119 @@
                     </div>
                 </div>
                 <div class="col-2">
-                    
-                   @*  <img src="@Model.product.ImageUrl" alt="Alternate Text" 
-                        style="width:100%; border-radius:5px; border:1px solid #bbb9b9" />
-                     *@
                     @if (Model.product.ProductImages != null)
                     {
                         foreach (var image in Model.product.ProductImages)
                         {
                             <div class="border p-1 m-2 text-center">
-                                <img src="@image.ImageUrl" width="100%" 
+                                <img src="@image.ImageUrl" width="100%"
                                      style="border-radius:5px; border:1px solid #bbb9b9" class="p-5 pb-2" />
-                               <a asp-action="DeleteImage" class="btn btn-danger pt-2" asp-route-id="@image.Id">
+                                <a asp-action="DeleteImage" class="btn btn-danger pt-2" asp-route-id="@image.Id">
                                     <i class="bi bi-trash3"></i> Delete
-                               </a>
+                                </a>
                             </div>
                         }
                     }
                 </div>
             </div>
         </form>
-
     </div>
 </div>
 
 @section Scripts {
+    <partial name="_ValidationScriptsPartial" />
 
+    <!-- Select2 -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <!-- TinyMCE -->
     <script>
-           <script>
         tinymce.init({
             selector: 'textarea',
             plugins: [
-                // Free plugins only
                 'anchor', 'autolink', 'charmap', 'codesample', 'emoticons',
                 'link', 'lists', 'media', 'searchreplace', 'table', 'visualblocks', 'wordcount'
             ],
             toolbar: 'undo redo | blocks | bold italic underline | link media | bullist numlist | table | emoticons charmap | removeformat',
-            menubar: false,   // optional: hides the top menu bar
-            branding: false   // optional: removes "Powered by Tiny"
+            menubar: false,
+            branding: false
+        });
+
+        $(document).ready(function () {
+            // Initialize Select2 for stores with improved configuration
+            $("#StoreSelect").select2({
+                placeholder: "Select stores for this product",
+                allowClear: true,
+                closeOnSelect: false,
+                width: '100%',
+                tags: false, // Disable tag creation
+                multiple: true
+            });
+
+            // Handle selection changes and update display
+            $('#StoreSelect').on('select2:select select2:unselect', function (e) {
+                updateSelectedStoresDisplay();
+            });
+
+            // Function to update the selected stores display
+            function updateSelectedStoresDisplay() {
+                var selectedValues = $('#StoreSelect').val() || [];
+                var storesList = $('#selectedStoresList');
+                var displayDiv = $('#selectedStoresDisplay');
+                
+                // Clear current display
+                storesList.empty();
+                
+                if (selectedValues.length > 0) {
+                    selectedValues.forEach(function(storeId) {
+                        var storeName = $('#StoreSelect option[value="' + storeId + '"]').text();
+                        storesList.append('<span class="badge bg-primary me-1 mb-1">' + storeName + '</span>');
+                    });
+                    displayDiv.show();
+                } else {
+                    displayDiv.hide();
+                }
+                
+                console.log('Selected stores:', selectedValues);
+            }
+
+            // Initial display update
+            updateSelectedStoresDisplay();
+
+            // Form validation
+            $('form').on('submit', function(e) {
+                var selectedStores = $('#StoreSelect').val();
+                if (!selectedStores || selectedStores.length === 0) {
+                    if (!confirm('No stores selected for this product. Continue without stores?')) {
+                        e.preventDefault();
+                        return false;
+                    }
+                }
+                console.log('Form submitted with stores:', selectedStores);
+            });
         });
     </script>
 
-    </script>
-    <partial name="_ValidationScriptsPartial" />
-}
+    <style>
+        .checkbox-wrapper-65 *,
+        .checkbox-wrapper-65 ::after,
+        .checkbox-wrapper-65 ::before {
+            box-sizing: border-box;
+        }
 
-
-
-
-<style>
-    .checkbox-wrapper-65 *,
-    .checkbox-wrapper-65 ::after,
-    .checkbox-wrapper-65 ::before {
-        box-sizing: border-box;
-    }
-
-    .checkbox-wrapper-65 .cbx {
-        position: relative;
-        display: block;
-        float: left;
-        width: 18px;
-        height: 18px;
-        border-radius: 4px;
-        background-color: #606062;
-        background-image: linear-gradient(#474749, #606062);
-        box-shadow: inset 0 1px 1px rgba(255,255,255,0.15), inset 0 -1px 1px rgba(0,0,0,0.15);
-        transition: all 0.15s ease;
-    }
+        .checkbox-wrapper-65 .cbx {
+            position: relative;
+            display: block;
+            float: left;
+            width: 18px;
+            height: 18px;
+            border-radius: 4px;
+            background-color: #606062;
+            background-image: linear-gradient(#474749, #606062);
+            box-shadow: inset 0 1px 1px rgba(255,255,255,0.15), inset 0 -1px 1px rgba(0,0,0,0.15);
+            transition: all 0.15s ease;
+        }
 
         .checkbox-wrapper-65 .cbx svg {
             position: absolute;
@@ -215,9 +284,9 @@
             margin-left: 6px;
         }
 
-    .checkbox-wrapper-65 {
-        user-select: none;
-    }
+        .checkbox-wrapper-65 {
+            user-select: none;
+        }
 
         .checkbox-wrapper-65 label {
             display: inline-block;
@@ -229,13 +298,27 @@
             visibility: hidden;
         }
 
-            .checkbox-wrapper-65 input[type="checkbox"]:checked + .cbx {
-                background-color: #606062;
-                background-image: linear-gradient(#255cd2, #1d52c1);
-            }
+        .checkbox-wrapper-65 input[type="checkbox"]:checked + .cbx {
+            background-color: #606062;
+            background-image: linear-gradient(#255cd2, #1d52c1);
+        }
 
-                .checkbox-wrapper-65 input[type="checkbox"]:checked + .cbx svg {
-                    stroke-dashoffset: 0;
-                    transition: all 0.15s ease;
-                }
-</style>
+        .checkbox-wrapper-65 input[type="checkbox"]:checked + .cbx svg {
+            stroke-dashoffset: 0;
+            transition: all 0.15s ease;
+        }
+
+        /* Select2 improvements */
+        .select2-container--default .select2-selection--multiple {
+            border: 1px solid #ced4da;
+            border-radius: 0.375rem;
+            min-height: 38px;
+        }
+
+        .select2-container--default .select2-selection--multiple .select2-selection__choice {
+            background-color: #0d6efd;
+            border-color: #0d6efd;
+            color: white;
+        }
+    </style>
+}
