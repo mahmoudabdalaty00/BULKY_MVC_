@@ -34,23 +34,33 @@ namespace BULKYWEB.Areas.Admin.Controllers
         #region Create||Update Product
         public IActionResult UpSert(int? id)
         {
+         
+            
+            
             ProductVM vm = new ProductVM()
             {
                 listItems = GetCategorySelectList(),
                 product = new Product(),
                 StoreList = GetStoreSelectList().ToList(),
-                SelectedStoreIds = new List<int>()
+                SelectedStoreIds = new List<int>()   ,
+                
             };
+
+
+
 
             if (id == null || id == 0)
             {
                 // Creating new product
                 return View(vm);
             }
+
+
             else
             {
                 // Editing existing product
-                vm.product = _unitOfWork.Product.Get(p => p.Id == id, includeProperties: "ProductImages,StoreProducts");
+                vm.product = _unitOfWork.Product
+                    .Get(p => p.Id == id, includeProperties: "ProductImages,StoreProducts");
 
                 if (vm.product == null)
                 {
@@ -73,7 +83,8 @@ namespace BULKYWEB.Areas.Admin.Controllers
                 if (vm.product.StoreProducts != null && vm.product.StoreProducts.Any())
                 {
                     vm.SelectedStoreIds = vm.product.StoreProducts
-                        .Select(sp => sp.StoreId).ToList();
+                        .Select(sp => sp.StoreId)
+                        .ToList();
                 }
 
                 return View(vm);
@@ -93,7 +104,10 @@ namespace BULKYWEB.Areas.Admin.Controllers
             {
                 var claimsIdentity = (ClaimsIdentity)User.Identity;
                 var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-                var ApplicationUser = _unitOfWork.ApplicationUser.Get(a => a.Id == userId);
+                
+                
+                var ApplicationUser = _unitOfWork.ApplicationUser
+                                .Get(a => a.Id == userId);
 
                 if (ApplicationUser == null)
                 {
@@ -113,6 +127,7 @@ namespace BULKYWEB.Areas.Admin.Controllers
                         pro.product.CreatedAt = DateTime.UtcNow;
                         pro.product.UpdatedAt = DateTime.UtcNow;
 
+                         
                         _unitOfWork.Product.Add(pro.product);
                         _unitOfWork.Save(); // Save to get the product ID
                     }
@@ -121,6 +136,7 @@ namespace BULKYWEB.Areas.Admin.Controllers
                         // Updating existing product
                         pro.product.UpdatedBy = ApplicationUser.Name;
                         pro.product.UpdatedAt = DateTime.UtcNow;
+
                         _unitOfWork.Product.Update(pro.product);
                         _unitOfWork.Save();
                     }
@@ -160,17 +176,19 @@ namespace BULKYWEB.Areas.Admin.Controllers
                 .GetAll(sp => sp.ProductId == productId)
                 .ToList();
 
-            var existingStoreIds = existingStoreProducts.Select(esp => esp.StoreId).ToList();
+            var existingStoreIds = existingStoreProducts
+                            .Select(esp => esp.StoreId).ToList();
 
             // Remove stores that are no longer selected
             var storesToRemove = existingStoreProducts
                 .Where(esp => !selectedStoreIds.Contains(esp.StoreId))
                 .ToList();
 
-            foreach (var storeToRemove in storesToRemove)
-            {
-                _unitOfWork.StoreProduct.Remove(storeToRemove);
-            }
+            _unitOfWork.StoreProduct.RemoveRange(storesToRemove);
+            //foreach (var storeToRemove in storesToRemove)
+            //{
+            //    _unitOfWork.StoreProduct.Remove(storeToRemove);
+            //}
 
             // Add new store relationships
             var newStoreIds = selectedStoreIds

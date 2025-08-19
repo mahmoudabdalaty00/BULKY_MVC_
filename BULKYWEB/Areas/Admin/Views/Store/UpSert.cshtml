@@ -86,8 +86,15 @@
                             </label>
                         </div>
 
-                        <!-- Simple Multi-select products -->
-                        <div class="mb-3">
+
+
+
+
+
+
+
+                      @*   <!-- Simple Multi-select products -->
+                         <div class="mb-3">
                             <label for="ProductSelect" class="form-label">Select Products</label>
                             <select id="ProductSelect" name="SelectedProductIds" class="form-control" multiple="multiple">
                                 @foreach (var product in Model.ProductList)
@@ -98,7 +105,7 @@
                                 }
                             </select>
                             <small class="form-text text-muted">Hold Ctrl (or Cmd on Mac) to select multiple products</small>
-                        </div>
+                        </div>   *@
 
                         <div class="row">
                             <div class="col-6 col-md-3">
@@ -115,9 +122,11 @@
                                 <a asp-controller="Store" asp-action="Index"
                                    class="btn btn-secondary border form-control">Back to Store List</a>
                             </div>
-                        </div>
+                        </div>  
                     </div>
                 </div>
+
+
                 <div class="col-2">
                     <!-- Placeholder for future store logo or image -->
                 </div>
@@ -134,14 +143,14 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     <script>
-        $(document).ready(function () {
-            // Initialize Select2 for better multi-select experience
-            $("#ProductSelect").select2({
-                placeholder: "Select products for this store",
-                allowClear: true,
-                closeOnSelect: false, // Keep dropdown open for multiple selections
-                width: '100%'
-            });
-        });
+        // $(document).ready(function () {
+        //     Initialize Select2 for better multi-select experience
+        //     $("#ProductSelect").select2({
+        //         placeholder: "Select products for this store",
+        //         allowClear: true,
+        //         closeOnSelect: false, Keep dropdown open for multiple selections
+        //         width: '100%'
+        //     });
+        // });
     </script>
 }
